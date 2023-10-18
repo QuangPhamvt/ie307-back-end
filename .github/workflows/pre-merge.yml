@@ -1,4 +1,6 @@
 name: Pre Pull Request
+env:
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
 on:
   pull_request:
     branches:
@@ -26,6 +28,18 @@ jobs:
         run: |
           echo "Using pettier check"
           bun format
+      - name: Add .env
+        run: |
+          echo "add DATABASE_URL"
+          rm -rf .env
+          touch .env
+          echo "DATABASE_URL=${{env.DATABASE_URL}}" >> .env
+
+      - name: Check database
+        run: |
+          echo "Using pettier check"
+          bun db:check
+
       - name: Build bunx
         run: |
           echo "Bun is Building"
