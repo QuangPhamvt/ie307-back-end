@@ -6,13 +6,21 @@
     "dev": "bun run --watch src/index.ts",
     "format": "bun run prettier src/**/*.ts --check",
     "format:fix": "bun run prettier src/**/*.ts --write",
+    "db:generate": "bunx drizzle-kit generate:mysql",
+    "db:pull": "bunx drizzle-kit introspect:mysql",
+    "db:push": "bunx drizzle-kit push:mysql",
+    "db:check": "bunx drizzle-kit check:mysql",
+    "db:studio": "bunx drizzle-kit studio",
     "prepare": "husky install"
   },
   "dependencies": {
     "@elysiajs/jwt": "^0.7.0",
     "@elysiajs/swagger": "^0.7.3",
+    "@planetscale/database": "^1.11.0",
+    "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.6",
-    "elysia": "latest"
+    "elysia": "latest",
+    "mysql2": "^3.6.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.0",
@@ -29,7 +37,7 @@
     }
   },
   "lint-staged": {
-    "*.ts": "bun format"
+    "./src/**/*.ts": "bun format"
   },
   "module": "src/index.js"
 }
