@@ -3,13 +3,33 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "format": "bun run prettier src/**/*.ts --check",
+    "format:fix": "bun run prettier src/**/*.ts --write",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@elysiajs/jwt": "^0.7.0",
+    "@elysiajs/swagger": "^0.7.3",
+    "drizzle-orm": "^0.28.6",
     "elysia": "latest"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@commitlint/cli": "^17.8.0",
+    "@commitlint/config-conventional": "^17.8.0",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.19.13",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.1",
+    "prettier": "3.0.3"
+  },
+  "husky": {
+    "hook": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": "bun format"
   },
   "module": "src/index.js"
 }
