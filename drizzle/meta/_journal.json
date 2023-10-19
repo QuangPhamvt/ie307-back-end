@@ -8,6 +8,34 @@
       "when": 1697638583244,
       "tag": "0000_square_nuke",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1697680956697,
+      "tag": "0001_fair_katie_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1697681851719,
+      "tag": "0002_lame_nebula",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1697681990879,
+      "tag": "0003_skinny_ultimatum",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1697685111593,
+      "tag": "0004_cloudy_marvel_zombies",
+      "breakpoints": true
     }
   ]
 }
