@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm"
 import { datetime, int, mysqlTable, text, tinyint } from "drizzle-orm/mysql-core"
 import { posts } from "./posts"
 
+// COMMENTS
 export const comments = mysqlTable("comments", {
   id: int("id")
     .primaryKey()
@@ -13,7 +14,6 @@ export const comments = mysqlTable("comments", {
   updateAt: datetime("update_at"),
   context: text("context"),
 })
-
 export const postCommentsRelations = relations(comments, ({ one }) => ({
   post: one(posts, {
     fields: [comments.postId],
