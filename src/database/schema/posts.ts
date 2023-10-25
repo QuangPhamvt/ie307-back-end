@@ -1,8 +1,9 @@
 import { relations, sql } from "drizzle-orm"
-import { datetime, int, mysqlTable, tinyint, varchar, text } from "drizzle-orm/mysql-core"
+import { datetime, int, mysqlTable, tinyint, varchar, primaryKey } from "drizzle-orm/mysql-core"
 import { users } from "./users"
 import { comments } from "./comments"
 
+//POST
 export const posts = mysqlTable("posts", {
   id: int("id")
     .primaryKey()
@@ -13,14 +14,40 @@ export const posts = mysqlTable("posts", {
   slug: varchar("slug", { length: 100 }).notNull(),
   published: tinyint("published").default(1),
   createAt: datetime("create_at").default(sql`CURRENT_TIMESTAMP`),
-  update: datetime("update_at").default(sql`CURRENT_TIMESTAMP`),
-  content: text("content").notNull(),
+  loves: int("loves"),
+  shares: int("shares"),
 })
-
 export const postsRelations = relations(posts, ({ one, many }) => ({
   author: one(users, {
     fields: [posts.authorId],
     references: [users.id],
   }),
   comments: many(comments),
+  loves: many(loves),
+}))
+
+//LOVE
+export const loves = mysqlTable(
+  `loves`,
+  {
+    authorId: int("author_id")
+      .notNull()
+      .references(() => users.id),
+    postId: int("post_id")
+      .notNull()
+      .references(() => posts.id),
+  },
+  (t) => ({
+    pk: primaryKey(t.authorId, t.postId),
+  }),
+)
+export const lovesRelations = relations(loves, ({ one }) => ({
+  author: one(users, {
+    fields: [loves.authorId],
+    references: [users.id],
+  }),
+  post: one(posts, {
+    fields: [loves.postId],
+    references: [posts.id],
+  }),
 }))
