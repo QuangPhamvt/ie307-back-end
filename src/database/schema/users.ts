@@ -4,7 +4,7 @@ import { loves, posts } from "./posts"
 
 // USERS
 export const users = mysqlTable("users", {
-  id: int("id")
+  id: varchar("id", { length: 32 })
     .primaryKey()
     .default(sql`(uuid())`),
   username: varchar("username", { length: 128 }).unique().notNull(),
@@ -19,11 +19,11 @@ export const usersRelation = relations(users, ({ many }) => ({
 
 //FOLLOW
 export const follow = mysqlTable("follow", {
-  id: int("id")
+  id: varchar("id", { length: 32 })
     .primaryKey()
     .default(sql`(uuid())`),
-  follower_id: int("follower"),
-  following_id: int("following"),
+  follower_id: varchar("follower", { length: 32 }),
+  following_id: varchar("following", { length: 32 }),
 })
 export const followeRelation = relations(follow, ({ one }) => ({
   follower: one(users, {

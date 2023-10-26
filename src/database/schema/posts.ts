@@ -5,10 +5,10 @@ import { comments } from "./comments"
 
 //POST
 export const posts = mysqlTable("posts", {
-  id: int("id")
+  id: varchar("id", { length: 32 })
     .primaryKey()
     .default(sql`(uuid())`),
-  authorId: int("author_id").references(() => users.id),
+  authorId: varchar("author_id", { length: 32 }).references(() => users.id),
   image: varchar("image", { length: 128 }),
   title: varchar("title", { length: 75 }).notNull(),
   slug: varchar("slug", { length: 100 }).notNull(),
@@ -30,10 +30,10 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
 export const loves = mysqlTable(
   `loves`,
   {
-    authorId: int("author_id")
+    authorId: varchar("author_id", { length: 32 })
       .notNull()
       .references(() => users.id),
-    postId: int("post_id")
+    postId: varchar("post_id", { length: 32 })
       .notNull()
       .references(() => posts.id),
   },
