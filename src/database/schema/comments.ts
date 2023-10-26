@@ -1,14 +1,14 @@
 import { relations, sql } from "drizzle-orm"
-import { datetime, int, mysqlTable, text, tinyint } from "drizzle-orm/mysql-core"
+import { datetime, int, mysqlTable, text, tinyint, varchar } from "drizzle-orm/mysql-core"
 import { posts } from "./posts"
 
 // COMMENTS
 export const comments = mysqlTable("comments", {
-  id: int("id")
+  id: varchar("id", { length: 32 })
     .primaryKey()
     .default(sql`(uuid())`),
-  postId: int("id").references(() => posts.id),
-  parentId: int("id"),
+  postId: varchar("id", { length: 32 }).references(() => posts.id),
+  parentId: varchar("id", { length: 32 }),
   published: tinyint("published").default(1),
   createAt: datetime("create_at").default(sql`CURRENT_TIMESTAMP`),
   updateAt: datetime("update_at"),

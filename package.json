@@ -3,7 +3,7 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun run --watch src/server.ts",
     "format": "bun run prettier src/**/*.ts --check",
     "format:fix": "bun run prettier src/**/*.ts --write",
     "db:generate": "bunx drizzle-kit generate:mysql",

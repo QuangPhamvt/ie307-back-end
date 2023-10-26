@@ -15,6 +15,27 @@ export const comments = mysqlTable("comments", {
 	}
 });
 
+export const follow = mysqlTable("follow", {
+	id: int("id").default(sql`uuid()`).notNull(),
+	follower: int("follower"),
+	following: int("following"),
+},
+(table) => {
+	return {
+		followId: primaryKey(table.id),
+	}
+});
+
+export const loves = mysqlTable("loves", {
+	authorId: int("author_id").notNull().references(() => users.id),
+	postId: int("post_id").notNull().references(() => posts.id),
+},
+(table) => {
+	return {
+		lovesAuthorIdPostId: primaryKey(table.authorId, table.postId),
+	}
+});
+
 export const posts = mysqlTable("posts", {
 	id: int("id").default(sql`uuid()`).notNull(),
 	authorId: int("author_id").references(() => users.id),
@@ -23,8 +44,8 @@ export const posts = mysqlTable("posts", {
 	slug: varchar("slug", { length: 100 }).notNull(),
 	published: tinyint("published").default(1),
 	createAt: datetime("create_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
-	updateAt: datetime("update_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
-	content: text("content").notNull(),
+	shares: int("shares"),
+	loves: int("loves"),
 },
 (table) => {
 	return {
@@ -34,14 +55,14 @@ export const posts = mysqlTable("posts", {
 
 export const users = mysqlTable("users", {
 	id: int("id").default(sql`uuid()`).notNull(),
-	email: varchar("email", { length: 128 }).notNull(),
 	password: varchar("password", { length: 128 }).notNull(),
 	avatar: varchar("avatar", { length: 240 }),
 	registerAt: datetime("register_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
+	username: varchar("username", { length: 128 }).notNull(),
 },
 (table) => {
 	return {
 		usersId: primaryKey(table.id),
-		usersEmailUnique: unique("users_email_unique").on(table.email),
+		usersUsernameUnique: unique("users_username_unique").on(table.username),
 	}
 });

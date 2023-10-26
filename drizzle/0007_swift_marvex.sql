@@ -1,0 +1,1 @@
+ALTER TABLE `follow` MODIFY COLUMN `id` varchar(32) NOT NULL DEFAULT (uuid());
