@@ -41,7 +41,7 @@ jobs:
           rm -rf .env
           touch .env
           echo "DATABASE_URL=${{env.DATABASE_URL}}" >> .env
-          echo "SERVER_PORT=3000" >> .env
+          echo "PORT_SERVER=4000" >> .env
           echo "JWT_ACCESS_SECRETKEY=${{env.JWT_ACCESS_SECRETKEY}}" >> .env
           echo "JWT_ACCESS_EXPIRY=${{env.JWT_ACCESS_EXPIRY}}" >> .env
           echo "JWT_REFRESH_SECRETKEY=${{env.JWT_REFRESH_SECRETKEY}}" >> .env
