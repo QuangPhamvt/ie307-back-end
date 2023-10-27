@@ -39,6 +39,7 @@ jobs:
       - name: Edit .env
         run: |
           rm -rf .env
+          pm2 stop "ie307-back-end"
           touch .env
           echo "DATABASE_URL=${{env.DATABASE_URL}}" >> .env
           echo "PORT_SERVER=4000" >> .env
@@ -56,3 +57,4 @@ jobs:
           bun db:pull 
           bun db:generate
           bun build:server
+          pm2 restart "ie307-back-end"
