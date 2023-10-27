@@ -7,7 +7,7 @@ const app = new Elysia()
   .get("/", () => "Hello Elysia")
   .use(routers)
   .listen({
-    port: 3000,
+    port: process.env.PORT_SERVER || 3000,
     hostname: "127.0.0.1",
   })
 

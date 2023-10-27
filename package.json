@@ -15,6 +15,9 @@
     "build:server": "bun build src/server.ts --compile --outfile build/server"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.437.0",
+    "@aws-sdk/lib-storage": "^3.437.0",
+    "@aws-sdk/s3-request-presigner": "^3.437.0",
     "@elysiajs/jwt": "^0.7.0",
     "@elysiajs/swagger": "^0.7.3",
     "@planetscale/database": "^1.11.0",
