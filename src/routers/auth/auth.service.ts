@@ -1,8 +1,9 @@
-import { like } from "drizzle-orm"
+import { eq, like } from "drizzle-orm"
 import Elysia from "elysia"
 import { StatusMap } from "elysia/dist/utils"
 import { SetElysia } from "src/config"
 import db, { users } from "src/database"
+import { getObject, s3ObjectUrl, uploadObject } from "../../../aws/s3"
 
 type NewUser = typeof users.$inferInsert
 const insertUser = async (newUser: NewUser) => {
@@ -105,6 +106,56 @@ const authService = {
       message: "Created",
       accessToken: at,
       refreshToken: rt,
+    }
+  },
+  profile: async (headers: Headers, set: SetElysia) => {
+    const userId = headers.get("userId") || ""
+    try {
+      const [user] = await db.select().from(users).where(like(users.id, userId))
+      const url = s3ObjectUrl(user.avatar || "")
+      return {
+        id: user.id,
+        username: user.username,
+        avatar: url,
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: auth.service.ts:116 ~ profile: ~ error:", error)
+    }
+  },
+  upload: async <TBody extends { username?: string; password?: string; avatar?: Blob }>(
+    headers: Headers,
+    body: TBody,
+    set: SetElysia,
+  ) => {
+    const { username, password, avatar } = body
+    let newUser = {}
+    // Username
+    if (username) {
+      const isExist = await existUser(username)
+      if (isExist) {
+        set.status = 400
+        return {
+          message: "Username exist!",
+        }
+      }
+      newUser = { ...newUser, username }
+    }
+    if (password) newUser = { ...newUser, password: await Bun.password.hash(password) }
+    if (avatar) {
+      const blob = new Blob([avatar], { type: "image" })
+      await uploadObject(`ie307/users/${headers.get("userId")}/avatar.webp`, blob, "image/webp")
+      newUser = { ...newUser, avatar: `ie307/users/${headers.get("userId")}/avatar.webp` }
+    }
+
+    if (username || password || avatar) {
+      await db
+        .update(users)
+        .set(newUser)
+        .where(like(users.id, headers.get("userId") || ""))
+    }
+    set.status = 201
+    return {
+      message: "Created",
     }
   },
 }
