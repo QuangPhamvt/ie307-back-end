@@ -2,7 +2,7 @@
 
 ## About The Project
 
-This is BE for project of IE307. 
+This is BE for project of IE307.
 
 ### Built With
 
@@ -14,6 +14,10 @@ This is BE for project of IE307.
 ## Prerequires
 
 - Bun version >= v1.0.x
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
 
 ## Getting Started
 
@@ -42,11 +46,12 @@ $ bun install
 ```
 DATABASE_URL="..." #connect to database
 ```
+
 - Husky setup
+
 ```bash
 bun prepare
 ```
-
 
 ### Usage
 
@@ -56,7 +61,6 @@ bun prepare
 $ cd ./ie307-front-end
 $ bun start
 ```
-
 
 ## Information
 
@@ -86,23 +90,26 @@ $ bun start
   },
 ```
 
-
 ### Technology
 
-
 ## Link Demo
-  link: 
+
+link:
+
 ## How to push
+
 - Role commit
   `{type}: {subject}`
-  - type: build | chore | ci | docs | feat | fix | perf | refactor | revert | style | test 
+  - type: build | chore | ci | docs | feat | fix | perf | refactor | revert | style | test
   - subject: 'Write a short, imperative tense description of the change'
-- Automatic:  check lint and format pre-commit 
+- Automatic: check lint and format pre-commit
 
 - Example:
+
 ```bash
 git commit -m "{type}: {subject}"
 ```
+
 Description
 |**Types**| **Description** |
 |:---| :--- |
