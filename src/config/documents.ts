@@ -11,7 +11,7 @@ const document = swagger({
         email: "quangpm220503vt@gmail.com",
       },
     },
-    tags: [{ name: "Auth", description: "Use to [signIn | signOut | signUp]" }],
+    tags: [{ name: "Auth", description: "Use to [signIn | signOut | signUp]" }, { name: "Post" }],
     components: {
       securitySchemes: {
         BearerAuth: {
@@ -21,7 +21,7 @@ const document = swagger({
       },
     },
   },
-  path: "/v1/document",
+  path: "/api/v1/document",
   autoDarkMode: false,
 })
 export default document

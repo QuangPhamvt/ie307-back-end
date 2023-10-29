@@ -11,4 +11,4 @@ const app = new Elysia()
     hostname: "127.0.0.1",
   })
 
-console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/v1/document`)
+console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/api/v1/document`)
