@@ -1,4 +1,4 @@
-import { eq, like } from "drizzle-orm"
+import { eq, like, or } from "drizzle-orm"
 import Elysia from "elysia"
 import { StatusMap } from "elysia/dist/utils"
 import { SetElysia } from "src/config"
@@ -9,8 +9,11 @@ type NewUser = typeof users.$inferInsert
 const insertUser = async (newUser: NewUser) => {
   return await db.insert(users).values(newUser)
 }
-const existUser = async (username: string) => {
-  const [isExist] = await db.select().from(users).where(like(users.username, username))
+const existUser = async (email: string, username: string) => {
+  const [isExist] = await db
+    .select()
+    .from(users)
+    .where(or(like(users.email, email), like(users.username, username)))
   return !!isExist
 }
 const accessToken = async (JWT_ACCESS_TOKEN: any, payload: Object) => {
@@ -21,21 +24,21 @@ const refreshToken = async (JWT_REFRESH_TOKEN: any, payload: Object) => {
 }
 
 const authService = {
-  signIn: async <TBody extends { username: string; password: string }>(
+  signIn: async <TBody extends { email: string; password: string }>(
     body: TBody,
     set: SetElysia,
     JWT_ACCESS_TOKEN: any,
     JWT_REFRESH_TOKEN: any,
   ) => {
-    const { username, password } = body
-    const isExistUser = await existUser(username)
+    const { email, password } = body
+    const isExistUser = await existUser(email, "")
     if (!isExistUser) {
       set.status = 400
       return {
-        message: "Username or password wrong!",
+        message: "Email or password wrong!",
       }
     }
-    const [user] = await db.select().from(users).where(like(users.username, username))
+    const [user] = await db.select().from(users).where(like(users.email, email))
     const isMatch = await Bun.password.verify(password, user.password)
     if (!isMatch) {
       set.status = 400
@@ -52,22 +55,22 @@ const authService = {
       refreshToken: rt,
     }
   },
-  signUp: async <TBody extends { username: string; password: string }>(
+  signUp: async <TBody extends { email: string; username: string; password: string }>(
     body: TBody,
     set: SetElysia,
     JWT_ACCESS_TOKEN: any,
     JWT_REFRESH_TOKEN: any,
   ) => {
-    const { username, password } = body
+    const { email, username, password } = body
     const passwordHash = await Bun.password.hash(password)
-    const isExistUser = await existUser(username)
+    const isExistUser = await existUser(email, username)
     if (isExistUser) {
       set.status = 400
       return {
         message: "Username exist!",
       }
     }
-    await insertUser({ username, password: passwordHash })
+    await insertUser({ email, username, password: passwordHash })
     const [user] = await db.select().from(users).where(like(users.username, username))
     const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, username: user.username })
     const rt = await refreshToken(JWT_REFRESH_TOKEN, { id: user.id, username: user.username })
@@ -131,7 +134,7 @@ const authService = {
     let newUser = {}
     // Username
     if (username) {
-      const isExist = await existUser(username)
+      const isExist = await existUser("", username)
       if (isExist) {
         set.status = 400
         return {
