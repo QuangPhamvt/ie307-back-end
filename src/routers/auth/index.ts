@@ -31,7 +31,7 @@ const authRouter = new Elysia()
             username: t.String({ default: "CustomAFK" }),
             password: t.String({ default: "12345678" }),
           }),
-          refresh: t.Object({
+          ["refresh"]: t.Object({
             refresh: t.String(),
           }),
         }),

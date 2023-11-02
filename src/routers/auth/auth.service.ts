@@ -3,7 +3,7 @@ import Elysia from "elysia"
 import { StatusMap } from "elysia/dist/utils"
 import { SetElysia } from "src/config"
 import db, { users } from "src/database"
-import { getObject, s3ObjectUrl, uploadObject } from "../../../aws/s3"
+import { getObject, s3ObjectUrl, uploadObject } from "aws/s3"
 
 type NewUser = typeof users.$inferInsert
 const insertUser = async (newUser: NewUser) => {
