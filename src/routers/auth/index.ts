@@ -23,10 +23,11 @@ const authRouter = new Elysia()
       body: t.Partial(
         t.Object({
           signIn: t.Object({
-            username: t.String({ default: "CustomAFK" }),
+            email: t.String({ default: "email@example.com", format: "email" }),
             password: t.String({ default: "12345678" }),
           }),
           signUp: t.Object({
+            email: t.String({ default: "email@example.com", format: "email" }),
             username: t.String({ default: "CustomAFK" }),
             password: t.String({ default: "12345678" }),
           }),
