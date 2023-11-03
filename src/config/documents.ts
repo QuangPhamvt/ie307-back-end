@@ -11,7 +11,12 @@ const document = swagger({
         email: "quangpm220503vt@gmail.com",
       },
     },
-    tags: [{ name: "Auth", description: "Use to [signIn | signOut | signUp]" }, { name: "Post" }],
+    tags: [
+      { name: "Auth", description: "Use to [signIn | signOut | signUp]" },
+      { name: "Post" },
+      { name: "Follow" },
+      { name: "Websocket" },
+    ],
     components: {
       securitySchemes: {
         BearerAuth: {
