@@ -54,7 +54,7 @@ const postRouter = new Elysia()
     {
       body: t.Object({
         title: t.String(),
-        image: t.File({ type: "image" }),
+        image: t.String({ contentEncoding: "base64" }),
       }),
       detail: {
         tags: ["Post"],

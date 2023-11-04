@@ -13,7 +13,7 @@ type TBodySearch = {
 }
 type TBodyUpload = {
   title?: string
-  image?: Blob
+  image?: string
 }
 /* Enhanced from: https://codepen.io/trongthanh/pen/rmYBdX */
 function toSlug(str: string) {
@@ -135,7 +135,12 @@ const postService: {
       .orderBy(desc(posts.createAt))
 
     const url = `ie307/users/${user.id}/posts/${post.id}.webp`
-    const blob = new Blob([image], { type: "image/webp" })
+
+    // const byteString = atob(image.split(",")[1])
+    // const mineString = image.split(",")[0].split(":")[1].split(";")[0]
+
+    // const blob = new Blob([buffer], { type: "image/" })
+    const blob = await fetch(image).then((res) => res.blob())
     await db.update(posts).set({ image: url }).where(like(posts.id, post.id))
     await uploadObject(url, blob, "image/webp")
 
