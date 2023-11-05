@@ -1,4 +1,5 @@
 import Elysia, { t } from "elysia"
+import authorizationMiddleware from "src/middleware/authorization"
 
 export const websocket = new Elysia({
   websocket: {
@@ -11,15 +12,21 @@ export const websocket = new Elysia({
     idleTimeout: 120,
   },
 })
+  .onBeforeHandle(({ request: { headers } }) => {
+    headers.set("sender_id", "quang")
+    headers.set("receiver_id", "chi")
+  })
   .ws("/ws", {
     body: t.Object({
+      receiver_id: t.String(),
       message: t.String(),
     }),
     open(ws) {
-      ws.subscribe("A")
+      ws.subscribe(ws.data.request.headers.get("sender_id") || "")
+      ws.subscribe(ws.data.request.headers.get("receiver_id") || "")
     },
     message(ws, message) {
-      ws.publish("A", message)
+      ws.publish(message.receiver_id, message.message)
     },
   })
   .listen(8000)
