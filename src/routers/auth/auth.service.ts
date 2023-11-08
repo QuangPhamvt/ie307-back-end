@@ -4,6 +4,7 @@ import { StatusMap } from "elysia/dist/utils"
 import { SetElysia } from "src/config"
 import db, { users } from "src/database"
 import { getObject, s3ObjectUrl, uploadObject } from "aws/s3"
+import { notifications } from "src/database/schema/notifications"
 
 type NewUser = typeof users.$inferInsert
 const insertUser = async (newUser: NewUser) => {
@@ -72,6 +73,7 @@ const authService = {
     }
     await insertUser({ email, username, password: passwordHash })
     const [user] = await db.select().from(users).where(like(users.username, username))
+    await db.insert(notifications).values({ user_id: user.id })
     const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, username: user.username })
     const rt = await refreshToken(JWT_REFRESH_TOKEN, { id: user.id, username: user.username })
     set.status = 200
