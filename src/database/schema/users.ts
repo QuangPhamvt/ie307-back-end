@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm"
 import { char, datetime, int, mysqlTable, text, varchar } from "drizzle-orm/mysql-core"
 import { loves, posts } from "./posts"
+import { notifications } from "./notifications"
 
 // USERS
 export const users = mysqlTable("users", {
@@ -13,11 +14,15 @@ export const users = mysqlTable("users", {
   avatar: varchar("avatar", { length: 240 }),
   registerAt: datetime("register_at").default(sql`CURRENT_TIMESTAMP`),
 })
-export const usersRelation = relations(users, ({ many }) => ({
+export const usersRelation = relations(users, ({ many, one }) => ({
   posts: many(posts),
   loves: many(loves),
-  sender: many(message, { relationName: "sender" }),
-  receiver: many(message, { relationName: "receiver" }),
+  sender: many(messages, { relationName: "sender" }),
+  receiver: many(messages, { relationName: "receiver" }),
+  notification: one(notifications, {
+    fields: [users.id],
+    references: [notifications.user_id],
+  }),
 }))
 
 //FOLLOW
@@ -40,7 +45,7 @@ export const followeRelation = relations(follow, ({ one }) => ({
 }))
 
 //MESSAGE
-export const message = mysqlTable("message", {
+export const messages = mysqlTable("message", {
   id: varchar("id", { length: 32 })
     .primaryKey()
     .default(sql`(uuid())`),
@@ -49,14 +54,14 @@ export const message = mysqlTable("message", {
   message: text("message").notNull(),
   createAt: datetime("create_at").default(sql`CURRENT_TIMESTAMP`),
 })
-export const messageRelation = relations(message, ({ one }) => ({
+export const messageRelation = relations(messages, ({ one }) => ({
   sender: one(users, {
-    fields: [message.sender_id],
+    fields: [messages.sender_id],
     references: [users.id],
     relationName: `sender`,
   }),
   receiver: one(users, {
-    fields: [message.receiver_id],
+    fields: [messages.receiver_id],
     references: [users.id],
     relationName: `receiver`,
   }),
