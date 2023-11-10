@@ -57,4 +57,6 @@ jobs:
           bun db:pull 
           bun db:generate
           bun build:server
+          bun build:websocket
           pm2 restart "ie307-back-end"
+          pm2 restart "ie307-websocket"
