@@ -2,7 +2,7 @@ import { like } from "drizzle-orm"
 import Elysia, { t } from "elysia"
 import db, { messages, users } from "src/database"
 import { notifications } from "src/database/schema/notifications"
-import authorizationMiddleware from "src/middleware/authorization"
+import chalk from "chalk"
 const notificationData = async (id: string) => {
   const [user] = await db.select().from(users).where(like(users.id, id))
   const [notification] = await db
@@ -35,8 +35,24 @@ export const websocket = new Elysia({
     params: t.Object({
       id: t.String(),
     }),
+    response: t.Partial(
+      t.Object({
+        chat: t.Object({
+          message: t.String(),
+        }),
+        notification: t.Partial(
+          t.Object({
+            username: t.String(),
+            notificationId: t.String(),
+            userId: t.Union([t.String(), t.Null()]),
+            isMessage: t.Union([t.Boolean(), t.Null()]),
+          }),
+        ),
+        message: t.String(),
+      }),
+    ),
     async open(ws) {
-      console.log("New connect in websocket: ", ws.data.params.id)
+      console.log(chalk.bgGray("New connect in websocket: "), ws.data.params.id)
       const id = ws.data.params.id
       ws.subscribe(ws.data.params.id)
       ws.send({ message: "New connection on websocket: " + id })
@@ -69,26 +85,8 @@ export const websocket = new Elysia({
       }
     },
     close(ws) {
-      console.log("Connection is close")
-      ws.send("Connection is close")
-    },
-  })
-  .ws("/notification/:id", {
-    body: t.Object({
-      newMessage: t.Number(),
-    }),
-    params: t.Object({
-      id: t.String(),
-    }),
-    async open(ws) {
-      console.log("New connect in notification: ", ws.data.params.id)
-      const id = ws.data.params.id
-      ws.subscribe(ws.data.params.id)
-    },
-    message(ws) {},
-    close(ws) {
-      ws.send("Connection is close")
-      console.log("Connection is close")
+      console.log(chalk.yellow("Connection is close"))
+      ws.send({ message: "Connection is close" })
     },
   })
   .listen(4001)

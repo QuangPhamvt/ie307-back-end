@@ -15,6 +15,7 @@ const document = swagger({
       { name: "Auth", description: "Use to [signIn | signOut | signUp]" },
       { name: "Post" },
       { name: "Follow" },
+      { name: "Chat" },
       { name: "Websocket" },
     ],
     components: {
