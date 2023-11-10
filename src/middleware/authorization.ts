@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import { like } from "drizzle-orm"
 import Elysia from "elysia"
 import { JWT_ACCESS_TOKEN } from "src/config/jwt"
@@ -15,9 +16,9 @@ authorizationMiddleware
     const JWT = authorization?.split(" ")[1]
     const user = await JWT_ACCESS_TOKEN.verify(JWT)
     if (!user) {
-      set.status = 401
+      set.status = 403
       return {
-        message: "Unauthorized",
+        message: "Forbidden",
       }
     }
     const [isMatch] = await db.select().from(users).where(like(users.id, user.id))
