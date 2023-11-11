@@ -38,6 +38,7 @@ export const websocket = new Elysia({
     response: t.Partial(
       t.Object({
         chat: t.Object({
+          sender_id: t.String(),
           message: t.String(),
         }),
         notification: t.Partial(
@@ -76,6 +77,7 @@ export const websocket = new Elysia({
         await db.update(notifications).set({ isMessage: true }).where(like(notifications.user_id, receiver_id))
         ws.publish(receiver_id, {
           chat: {
+            sender_id: ws.data.params.id,
             message: Message,
           },
           notification: {
