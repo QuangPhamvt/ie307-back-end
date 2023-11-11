@@ -1,7 +1,6 @@
 import { Elysia } from "elysia"
 import routers from "./routers"
 import { document } from "./config"
-import { Server } from "socket.io"
 
 const app = new Elysia()
   .use(document)
