@@ -166,6 +166,7 @@ const postService: {
     return {
       originPost: {
         ...data,
+        image: data.image && s3ObjectUrl(data.image),
         authorAvatar: data.authorAvatar && s3ObjectUrl(data.authorAvatar),
       },
     }
