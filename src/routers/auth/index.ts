@@ -64,7 +64,7 @@ const authRouter = new Elysia()
         t.Object({
           username: t.String({ example: "CustomAFK" }),
           password: t.String({ example: "123456" }),
-          avatar: t.File({ type: "image" }),
+          avatar: t.String({ contentEncoding: "base64" }),
         }),
       ),
       detail: {
