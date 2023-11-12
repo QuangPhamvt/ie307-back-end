@@ -15,6 +15,9 @@ type TBodyUpload = {
   title?: string
   image?: string
 }
+type TBodyOriginPost = {
+  postId?: string
+}
 /* Enhanced from: https://codepen.io/trongthanh/pen/rmYBdX */
 function toSlug(str: string) {
   // Convert to lower case
@@ -41,13 +44,13 @@ function toSlug(str: string) {
 }
 
 const postService: {
-  [x: string]: <TBody extends TBodyPostList & TBodyUpload & TBodySearch>(
+  [x: string]: <TBody extends TBodyPostList & TBodyUpload & TBodySearch & TBodyOriginPost>(
     body: TBody,
     headers?: Headers,
     set?: SetElysia,
   ) => unknown
 } = {
-  ["postList"]: async (body) => {
+  postList: async (body) => {
     const { page = 1, limit = 5 } = body
     const postList = await db
       .select({
@@ -68,7 +71,7 @@ const postService: {
       }),
     }
   },
-  ["search"]: async (body, headers, set) => {
+  search: async (body, headers, set) => {
     const { search } = body
     if (!search) {
       set && (set.status = 400)
@@ -86,13 +89,14 @@ const postService: {
         image: posts.image,
         createAt: posts.createAt,
         slug: posts.slug,
-        publised: posts.published,
+        published: posts.published,
         loves: posts.loves,
         shares: posts.shares,
       })
       .from(posts)
       .innerJoin(users, like(posts.authorId, users.id))
-      .where(like(posts.slug, search))
+      .where(like(posts.slug, `%${toSlug(search)}%`))
+      .orderBy(desc(posts.createAt))
     return {
       message: "Ok",
       posts: postList.map((item) => {
@@ -107,7 +111,7 @@ const postService: {
       }),
     }
   },
-  ["upload"]: async (body, headers, set) => {
+  upload: async (body, headers, set) => {
     const { title, image } = body
 
     if (!title || !image) {
@@ -136,10 +140,6 @@ const postService: {
 
     const url = `ie307/users/${user.id}/posts/${post.id}.webp`
 
-    // const byteString = atob(image.split(",")[1])
-    // const mineString = image.split(",")[0].split(":")[1].split(";")[0]
-
-    // const blob = new Blob([buffer], { type: "image/" })
     const blob = await fetch(image).then((res) => res.blob())
     await db.update(posts).set({ image: url }).where(like(posts.id, post.id))
     await uploadObject(url, blob, "image/webp")
@@ -147,6 +147,27 @@ const postService: {
     set && (set.status = 201)
     return {
       message: "Created",
+    }
+  },
+  originPost: async (body) => {
+    const { postId = "" } = body
+    const [data] = await db
+      .select({
+        id: posts.id,
+        title: posts.title,
+        image: posts.image,
+        authorId: users.id,
+        authorUsername: users.username,
+        authorAvatar: users.avatar,
+      })
+      .from(posts)
+      .where(like(posts.id, postId))
+      .innerJoin(users, like(posts.authorId, users.id))
+    return {
+      originPost: {
+        ...data,
+        authorAvatar: data.authorAvatar && s3ObjectUrl(data.authorAvatar),
+      },
     }
   },
 }

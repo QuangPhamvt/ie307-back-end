@@ -117,7 +117,7 @@ const authService = {
     const userId = headers.get("userId") || ""
     try {
       const [user] = await db.select().from(users).where(like(users.id, userId))
-      const url = s3ObjectUrl(user.avatar || "")
+      const url = user.avatar && s3ObjectUrl(user.avatar)
       return {
         id: user.id,
         username: user.username,
