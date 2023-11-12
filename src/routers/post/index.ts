@@ -27,6 +27,9 @@ const postRouter = new Elysia()
       if (!!body.search) {
         return postService.search(body.search)
       }
+      if (!!body.originPost) {
+        return postService.originPost(body.originPost)
+      }
     },
     {
       body: t.Partial(
@@ -34,6 +37,9 @@ const postRouter = new Elysia()
           ["postList"]: t.Object({
             ["limit"]: t.Number(),
             ["page"]: t.Number(),
+          }),
+          originPost: t.Object({
+            postId: t.String(),
           }),
           ["search"]: t.Object({
             ["search"]: t.String(),
