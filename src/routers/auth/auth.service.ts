@@ -127,7 +127,7 @@ const authService = {
       console.log("🚀 ~ file: auth.service.ts:116 ~ profile: ~ error:", error)
     }
   },
-  upload: async <TBody extends { username?: string; password?: string; avatar?: Blob }>(
+  upload: async <TBody extends { username?: string; password?: string; avatar?: string }>(
     headers: Headers,
     body: TBody,
     set: SetElysia,
@@ -147,7 +147,7 @@ const authService = {
     }
     if (password) newUser = { ...newUser, password: await Bun.password.hash(password) }
     if (avatar) {
-      const blob = new Blob([avatar], { type: "image" })
+      const blob = await fetch(avatar).then((res) => res.blob())
       await uploadObject(`ie307/users/${headers.get("userId")}/avatar.webp`, blob, "image/webp")
       newUser = { ...newUser, avatar: `ie307/users/${headers.get("userId")}/avatar.webp` }
     }
