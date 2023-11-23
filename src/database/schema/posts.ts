@@ -12,11 +12,13 @@ export const posts = mysqlTable(
       .primaryKey()
       .default(sql`(uuid())`),
     authorId: varchar("author_id", { length: 32 }).references(() => users.id),
-    image: varchar("image", { length: 128 }),
+    image: varchar("image", { length: 128 }).notNull(),
     title: varchar("title", { length: 75 }).notNull(),
     slug: varchar("slug", { length: 100 }).notNull(),
-    published: tinyint("published").default(1),
-    createAt: datetime("create_at").default(sql`CURRENT_TIMESTAMP`),
+    published: tinyint("published").default(1).notNull(),
+    createAt: datetime("create_at")
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP`),
     loves: int("loves").default(0),
     shares: int("shares").default(0),
   },
