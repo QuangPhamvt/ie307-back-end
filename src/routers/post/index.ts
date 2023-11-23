@@ -1,51 +1,46 @@
 import Elysia, { t } from "elysia"
 import { JWT_ACCESS_TOKEN } from "src/config/jwt"
 import authorizationMiddleware from "src/middleware/authorization"
-import postService from "./post.service"
+import postModel from "./post.model"
+import postService from "./service"
 
 const postRouter = new Elysia()
+  .use(postModel)
   .use(JWT_ACCESS_TOKEN)
-  .get("", ({ body }) => {}, {
-    body: t.Partial(
-      t.Object({
-        ["postList"]: t.Object({
-          ["limit"]: t.Number(),
-          ["page"]: t.Number(),
-        }),
-      }),
-    ),
-    detail: {
-      tags: ["Post"],
-    },
-  })
   .post(
-    "",
-    ({ body }) => {
-      if (!!body.postList) {
-        return postService.postList(body.postList)
-      }
-      if (!!body.search) {
-        return postService.search(body.search)
-      }
-      if (!!body.originPost) {
-        return postService.originPost(body.originPost)
-      }
+    "/post-list",
+    ({ request: { headers }, set, body }) => {
+      return postService.postList({ headers, set, body })
     },
     {
-      body: t.Partial(
-        t.Object({
-          ["postList"]: t.Object({
-            ["limit"]: t.Number(),
-            ["page"]: t.Number(),
-          }),
-          originPost: t.Object({
-            postId: t.String(),
-          }),
-          ["search"]: t.Object({
-            ["search"]: t.String(),
-          }),
-        }),
-      ),
+      body: "postListBody",
+      response: "postListResponse",
+      detail: {
+        tags: ["Post"],
+      },
+    },
+  )
+  .post(
+    "/search",
+    ({ request: { headers }, set, body }) => {
+      return postService.search({ headers, set, body })
+    },
+    {
+      body: "searchBody",
+      response: "searchResponseDto",
+      detail: {
+        tags: ["Post"],
+      },
+    },
+  )
+  .post(
+    "/origin",
+    ({ request: { headers }, set, body }) => {
+      return postService.originPost({ headers, body, set })
+    },
+    {
+      body: "originPostBody",
+      response: "originPostResponse",
       detail: {
         tags: ["Post"],
       },
@@ -55,13 +50,11 @@ const postRouter = new Elysia()
   .post(
     "/upload",
     ({ body, request: { headers }, set }) => {
-      return postService.upload(body, headers, set)
+      return postService.upload({ headers, body, set })
     },
     {
-      body: t.Object({
-        title: t.String(),
-        image: t.String({ contentEncoding: "base64" }),
-      }),
+      body: "uploadPostBody",
+      response: "uploadPostResponse",
       detail: {
         tags: ["Post"],
         security: [{ BearerAuth: [] }],

@@ -50,67 +50,6 @@ const postService: {
     set?: SetElysia,
   ) => unknown
 } = {
-  postList: async (body) => {
-    const { page = 1, limit = 5 } = body
-    const postList = await db
-      .select({
-        id: posts.id,
-        image: posts.image,
-      })
-      .from(posts)
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy(desc(posts.createAt))
-    return {
-      message: "Ok",
-      postList: postList.map((item) => {
-        return {
-          ...item,
-          image: s3ObjectUrl(item.image || ""),
-        }
-      }),
-    }
-  },
-  search: async (body, headers, set) => {
-    const { search } = body
-    if (!search) {
-      set && (set.status = 400)
-      return {
-        message: "Bad request",
-      }
-    }
-    const postList = await db
-      .select({
-        id: posts.id,
-        author: {
-          username: users.username,
-          avatar: users.avatar,
-        },
-        image: posts.image,
-        createAt: posts.createAt,
-        slug: posts.slug,
-        published: posts.published,
-        loves: posts.loves,
-        shares: posts.shares,
-      })
-      .from(posts)
-      .innerJoin(users, like(posts.authorId, users.id))
-      .where(like(posts.slug, `%${toSlug(search)}%`))
-      .orderBy(desc(posts.createAt))
-    return {
-      message: "Ok",
-      posts: postList.map((item) => {
-        return {
-          ...item,
-          author: {
-            ...item.author,
-            avatar: item.author.avatar && s3ObjectUrl(item.author.avatar),
-          },
-          image: s3ObjectUrl(item.image || ""),
-        }
-      }),
-    }
-  },
   upload: async (body, headers, set) => {
     const { title, image } = body
 
@@ -147,28 +86,6 @@ const postService: {
     set && (set.status = 201)
     return {
       message: "Created",
-    }
-  },
-  originPost: async (body) => {
-    const { postId = "" } = body
-    const [data] = await db
-      .select({
-        id: posts.id,
-        title: posts.title,
-        image: posts.image,
-        authorId: users.id,
-        authorUsername: users.username,
-        authorAvatar: users.avatar,
-      })
-      .from(posts)
-      .where(like(posts.id, postId))
-      .innerJoin(users, like(posts.authorId, users.id))
-    return {
-      originPost: {
-        ...data,
-        image: data.image && s3ObjectUrl(data.image),
-        authorAvatar: data.authorAvatar && s3ObjectUrl(data.authorAvatar),
-      },
     }
   },
 }

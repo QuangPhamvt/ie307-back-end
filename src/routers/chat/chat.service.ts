@@ -22,14 +22,12 @@ export const chatService: TChatService = {
     const receiver = (
       await db
         .selectDistinct({
-          senderId: users.id,
+          senderId: messages.sender_id,
           receiverId: messages.receiver_id,
         })
         .from(users)
-        .innerJoin(
-          messages,
-          and(or(like(users.id, messages.sender_id), like(users.id, messages.receiver_id)), like(users.id, userId)),
-        )
+        .innerJoin(messages, or(like(users.id, messages.sender_id), like(users.id, messages.receiver_id)))
+        .where(like(users.id, userId))
     ).filter((item) => item.receiverId !== item.senderId)
     const data = await Promise.all(
       receiver.map(async (item) => {
