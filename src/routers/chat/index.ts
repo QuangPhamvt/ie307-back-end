@@ -22,13 +22,11 @@ const chatRouter = new Elysia()
       if (body.detail) return chatService.postDetail({ body: body.detail, headers, set })
     },
     {
-      body: t.Partial(
-        t.Object({
-          detail: t.Object({
-            receiver_id: t.String(),
-          }),
+      body: t.Object({
+        detail: t.Object({
+          receiver_id: t.String(),
         }),
-      ),
+      }),
       detail: {
         tags: ["Chat"],
         security: [{ BearerAuth: [] }],

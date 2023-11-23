@@ -1,7 +1,8 @@
 import { relations, sql } from "drizzle-orm"
-import { datetime, int, mysqlTable, tinyint, varchar, primaryKey, unique } from "drizzle-orm/mysql-core"
+import { datetime, int, mysqlTable, tinyint, varchar } from "drizzle-orm/mysql-core"
 import { users } from "./users"
 import { comments } from "./comments"
+import { loves } from "./loves"
 
 //POST
 export const posts = mysqlTable(
@@ -30,30 +31,4 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
   }),
   comments: many(comments),
   loves: many(loves),
-}))
-
-//LOVE
-export const loves = mysqlTable(
-  `loves`,
-  {
-    authorId: varchar("author_id", { length: 32 })
-      .notNull()
-      .references(() => users.id),
-    postId: varchar("post_id", { length: 32 })
-      .notNull()
-      .references(() => posts.id),
-  },
-  (t) => ({
-    pk: primaryKey(t.authorId, t.postId),
-  }),
-)
-export const lovesRelations = relations(loves, ({ one }) => ({
-  author: one(users, {
-    fields: [loves.authorId],
-    references: [users.id],
-  }),
-  post: one(posts, {
-    fields: [loves.postId],
-    references: [posts.id],
-  }),
 }))

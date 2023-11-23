@@ -1,41 +1,46 @@
-import jwt from "@elysiajs/jwt"
 import Elysia, { t } from "elysia"
-import authService from "./auth.service"
 import authorizationMiddleware from "src/middleware/authorization"
 import { JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN } from "src/config/jwt"
+import authModel from "./auth.model"
+import authService from "./service"
 const authRouter = new Elysia()
+  .use(authModel)
   .use(JWT_ACCESS_TOKEN)
   .use(JWT_REFRESH_TOKEN)
   .post(
-    "",
-    ({ body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN, request }) => {
-      if (!!body.signIn) {
-        return authService.signIn(body.signIn, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN)
-      }
-      if (!!body.signUp) {
-        return authService.signUp(body.signUp, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN)
-      }
-      if (!!body.refresh) {
-        return authService.refresh(body.refresh, set, request, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN)
-      }
+    "/signIn",
+    ({ request: { headers }, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
+      return authService.signIn({ headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
     },
     {
-      body: t.Partial(
-        t.Object({
-          signIn: t.Object({
-            email: t.String({ default: "email@example.com", format: "email" }),
-            password: t.String({ default: "12345678" }),
-          }),
-          signUp: t.Object({
-            email: t.String({ default: "email@example.com", format: "email" }),
-            username: t.String({ default: "CustomAFK" }),
-            password: t.String({ default: "12345678" }),
-          }),
-          ["refresh"]: t.Object({
-            refresh: t.String(),
-          }),
-        }),
-      ),
+      body: "signInBody",
+      response: "signInResponse",
+      detail: {
+        tags: ["Auth"],
+      },
+    },
+  )
+  .post(
+    "/signUp",
+    ({ request: { headers }, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
+      return authService.signUp({ headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
+    },
+    {
+      body: "signUpBody",
+      response: "signUpResponse",
+      detail: {
+        tags: ["Auth"],
+      },
+    },
+  )
+  .post(
+    "/refresh",
+    ({ request: { headers }, set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
+      return authService.refresh({ headers, set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
+    },
+    {
+      body: "refreshBody",
+      response: "refreshResponse",
       detail: {
         tags: ["Auth"],
       },
@@ -45,9 +50,10 @@ const authRouter = new Elysia()
   .get(
     "/profile",
     ({ request: { headers }, set }) => {
-      return authService.profile(headers, set)
+      return authService.profile({ headers, set })
     },
     {
+      response: "profileResponse",
       detail: {
         tags: ["Auth"],
         security: [{ BearerAuth: [] }],
@@ -57,16 +63,10 @@ const authRouter = new Elysia()
   .post(
     "/upload",
     ({ request: { headers }, body, set }) => {
-      return authService.upload(headers, body, set)
+      return authService.upload({ headers, body, set })
     },
     {
-      body: t.Partial(
-        t.Object({
-          username: t.String({ example: "CustomAFK" }),
-          password: t.String({ example: "123456" }),
-          avatar: t.String({ contentEncoding: "base64" }),
-        }),
-      ),
+      body: "uploadBody",
       detail: {
         tags: ["Auth"],
         security: [{ BearerAuth: [] }],
