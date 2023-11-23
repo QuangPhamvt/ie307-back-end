@@ -7,7 +7,7 @@ export const comments = mysqlTable("comments", {
   id: varchar("id", { length: 32 })
     .primaryKey()
     .default(sql`(uuid())`),
-  postId: varchar("id", { length: 32 }).references(() => posts.id),
+  postId: varchar("id", { length: 32 }),
   parentId: varchar("id", { length: 32 }),
   published: tinyint("published").default(1),
   createAt: datetime("create_at").default(sql`CURRENT_TIMESTAMP`),

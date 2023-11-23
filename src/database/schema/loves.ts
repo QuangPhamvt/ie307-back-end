@@ -7,12 +7,8 @@ import { posts } from "./posts"
 export const loves = mysqlTable(
   `loves`,
   {
-    authorId: varchar("author_id", { length: 32 })
-      .notNull()
-      .references(() => users.id),
-    postId: varchar("post_id", { length: 32 })
-      .notNull()
-      .references(() => posts.id),
+    authorId: varchar("author_id", { length: 32 }).notNull(),
+    postId: varchar("post_id", { length: 32 }).notNull(),
   },
   (t) => ({
     pk: primaryKey(t.authorId, t.postId),

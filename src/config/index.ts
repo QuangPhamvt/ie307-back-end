@@ -17,4 +17,5 @@ export type SetElysia = {
     >
   >
 }
+
 export { default as document } from "./documents"

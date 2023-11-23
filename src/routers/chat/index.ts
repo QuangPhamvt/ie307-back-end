@@ -1,8 +1,10 @@
 import Elysia, { t } from "elysia"
 import authorizationMiddleware from "src/middleware/authorization"
-import { chatService } from "./chat.service"
+import chatService from "./service"
+import chatModel from "./chat.model"
 
 const chatRouter = new Elysia()
+  .use(chatModel)
   .use(authorizationMiddleware)
   .get(
     "",
@@ -10,23 +12,7 @@ const chatRouter = new Elysia()
       return chatService.getSummarized({ headers, set })
     },
     {
-      detail: {
-        tags: ["Chat"],
-        security: [{ BearerAuth: [] }],
-      },
-    },
-  )
-  .post(
-    "",
-    ({ body, request: { headers }, set }) => {
-      if (body.detail) return chatService.postDetail({ body: body.detail, headers, set })
-    },
-    {
-      body: t.Object({
-        detail: t.Object({
-          receiver_id: t.String(),
-        }),
-      }),
+      response: "getSummarizedResponse",
       detail: {
         tags: ["Chat"],
         security: [{ BearerAuth: [] }],

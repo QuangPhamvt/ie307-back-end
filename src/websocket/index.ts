@@ -1,8 +1,7 @@
-import { like } from "drizzle-orm"
+import { and, like } from "drizzle-orm"
 import Elysia, { t } from "elysia"
-import db, { messages, users } from "src/database"
+import db, { listMessages, messages, users } from "src/database"
 import { notifications } from "src/database/schema/notifications"
-import chalk from "chalk"
 const notificationData = async (id: string) => {
   const [user] = await db.select().from(users).where(like(users.id, id))
   const [notification] = await db
@@ -23,73 +22,55 @@ export const websocket = new Elysia({
   },
 })
   .ws("/websocket/:id", {
-    body: t.Partial(
-      t.Object({
-        notification: t.Boolean(),
-        chat: t.Object({
-          receiver_id: t.String(),
-          message: t.String(),
-        }),
-      }),
-    ),
-    params: t.Object({
-      id: t.String(),
-    }),
-    response: t.Partial(
-      t.Object({
-        chat: t.Object({
-          sender_id: t.String(),
-          message: t.String(),
-        }),
-        notification: t.Partial(
-          t.Object({
-            username: t.String(),
-            notificationId: t.String(),
-            userId: t.Union([t.String(), t.Null()]),
-            isMessage: t.Union([t.Boolean(), t.Null()]),
-          }),
-        ),
-        message: t.String(),
-      }),
-    ),
-    async open(ws) {
-      console.log(chalk.bgGray("New connect in websocket: "), ws.data.params.id)
-      const id = ws.data.params.id
-      ws.subscribe(ws.data.params.id)
-      ws.send({ message: "New connection on websocket: " + id })
-      const { user, notification } = await notificationData(id)
-      ws.send({
-        notification: {
-          username: user.username,
-          ...notification,
-        },
-      })
+    open(ws) {
+      const { id } = ws.data.params
+      ws.subscribe(`notification/${id}`)
+      ws.subscribe(`message/${id}`)
+      ws.publish(`notification/${id}`, "Connect to Notification")
+      ws.publish(`message/${id}`, "Connect to Message")
     },
     async message(ws, message) {
+      const { id } = ws.data.params
+      // CHAT
       if (message.chat) {
         const { receiver_id, message: Message } = message.chat
-        const data = {
-          sender_id: ws.data.params.id,
-          receiver_id: receiver_id,
-          message: Message,
+        // ADD to list message
+        const [list_message] = await db
+          .select()
+          .from(listMessages)
+          .where(and(like(listMessages.author_id, id), like(listMessages.user_id, receiver_id)))
+        if (list_message) {
+          await db.update(listMessages).set({ message: Message, sender_id: id }).where(like(listMessages.author_id, id))
+          await db
+            .update(listMessages)
+            .set({ message: Message, sender_id: id })
+            .where(like(listMessages.author_id, receiver_id))
+        } else {
+          await db.insert(listMessages).values({ author_id: id, user_id: receiver_id, message: Message, sender_id: id })
+          await db.insert(listMessages).values({ author_id: receiver_id, user_id: id, message: Message, sender_id: id })
         }
-        await db.insert(messages).values(data)
-        await db.update(notifications).set({ isMessage: true }).where(like(notifications.user_id, receiver_id))
-        ws.publish(receiver_id, {
-          chat: {
-            sender_id: ws.data.params.id,
-            message: Message,
-          },
-          notification: {
-            isMessage: true,
-          },
-        })
+        // ADD message
+        await db.insert(messages).values({ sender_id: id, receiver_id, message: Message })
+        ws.publish(`message/${receiver_id}`, { sender_id: id, message: Message })
+      }
+      if (message.notification) {
       }
     },
     close(ws) {
-      console.log(chalk.yellow("Connection is close"))
-      ws.send({ message: "Connection is close" })
+      const { id } = ws.data.params
+      ws.unsubscribe(`notification/${id}`)
+      ws.unsubscribe(`message/${id}`)
     },
+    body: t.Object({
+      chat: t.Union([
+        t.Object({
+          receiver_id: t.String(),
+          message: t.String(),
+        }),
+        t.Null(),
+      ]),
+      notification: t.Union([t.Object({}), t.Null()]),
+    }),
   })
   .listen(4001)
 console.log(`🦊 Websocket is running at http://${websocket.server?.hostname}:4001/api/v1/document`)
