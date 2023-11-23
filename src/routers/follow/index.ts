@@ -1,15 +1,18 @@
 import Elysia, { t } from "elysia"
 import authorizationMiddleware from "src/middleware/authorization"
-import { followService } from "./follow.service"
+import followService from "./service"
+import { followModel } from "./follow.model"
 
 const followRouter = new Elysia()
+  .use(followModel)
   .use(authorizationMiddleware)
   .get(
     "",
     ({ request: { headers }, set }) => {
-      return followService.getFollowing(headers, set)
+      return followService.getFollowing({ headers, set })
     },
     {
+      response: "getFollowingResponse",
       detail: {
         tags: ["Follow"],
         security: [{ BearerAuth: [] }],
@@ -17,22 +20,27 @@ const followRouter = new Elysia()
     },
   )
   .post(
-    "",
-    ({ body, request: { headers }, set }) => {
-      if (body.follow) return followService.follow(body.follow, headers, set)
-      if (body.unFollow) return followService.unFollow(body.unFollow, headers, set)
+    "/following",
+    ({ request: { headers }, set, body }) => {
+      return followService.followUser({ headers, set, body })
     },
     {
-      body: t.Partial(
-        t.Object({
-          follow: t.Object({
-            following_id: t.String(),
-          }),
-          unFollow: t.Object({
-            following_id: t.String(),
-          }),
-        }),
-      ),
+      body: "followingBody",
+      response: "followingResponse",
+      detail: {
+        tags: ["Follow"],
+        security: [{ BearerAuth: [] }],
+      },
+    },
+  )
+  .post(
+    "/un-following",
+    ({ request: { headers }, set, body }) => {
+      return followService.unFollowUser({ headers, set, body })
+    },
+    {
+      body: "unFollowingBody",
+      response: "unFollowingResponse",
       detail: {
         tags: ["Follow"],
         security: [{ BearerAuth: [] }],
