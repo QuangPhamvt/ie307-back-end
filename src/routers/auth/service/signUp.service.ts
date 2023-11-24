@@ -1,3 +1,4 @@
+import { s3ObjectUrl } from "aws/s3"
 import { like } from "drizzle-orm"
 import { SetElysia } from "src/config"
 import db, { notifications, users } from "src/database"
@@ -30,8 +31,10 @@ export const signUp = async <T extends signUpDto>(props: T) => {
     await insertUser({ email, username, password: passwordHash })
     const [user] = await db.select().from(users).where(like(users.username, username))
     await db.insert(notifications).values({ user_id: user.id })
-    const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, username: user.username })
-    const rt = await refreshToken(JWT_REFRESH_TOKEN, { id: user.id, username: user.username })
+
+    const avatar = user.avatar ? s3ObjectUrl(user.avatar) : null
+    const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, username: user.username, avatar })
+    const rt = await refreshToken(JWT_REFRESH_TOKEN, { id: user.id, username: user.username, avatar })
     set.status = 200
     return {
       message: "Created new account",
