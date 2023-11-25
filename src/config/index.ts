@@ -1,7 +1,7 @@
 import { Prettify } from "elysia/dist/types"
 import { HTTPStatusName } from "elysia/dist/utils"
 import { CookieOptions } from "elysia/dist/cookie"
-
+export * from "./jwt"
 export type SetElysia = {
   headers: Record<string, string> & {
     "Set-Cookie"?: string | string[]

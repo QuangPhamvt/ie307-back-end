@@ -25,7 +25,7 @@ export const followUser = async <T extends followUserDto>(props: T) => {
     await db.insert(follow).values(newFollow)
     set.status = 201
     return {
-      message: "Internal Server Error",
+      message: "Created",
     }
   } catch (error) {
     set.status = "Internal Server Error"

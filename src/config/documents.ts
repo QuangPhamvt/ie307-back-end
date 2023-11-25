@@ -17,6 +17,7 @@ const document = swagger({
       { name: "Follow" },
       { name: "Chat" },
       { name: "Websocket" },
+      { name: "User" },
     ],
     components: {
       securitySchemes: {

@@ -1,5 +1,5 @@
-import Elysia, { t } from "elysia"
-import { JWT_ACCESS_TOKEN } from "src/config/jwt"
+import Elysia from "elysia"
+import { JWT_ACCESS_TOKEN } from "src/config"
 import authorizationMiddleware from "src/middleware/authorization"
 import postModel from "./post.model"
 import postService from "./service"
