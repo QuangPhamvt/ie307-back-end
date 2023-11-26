@@ -53,6 +53,7 @@ jobs:
           echo "AWS_BUCKET_NAME=${{env.AWS_BUCKET_NAME}}" >> .env
       - name: Build bunx
         run: |
+
           echo "Bun is Building"
           bun db:pull 
           bun db:generate
