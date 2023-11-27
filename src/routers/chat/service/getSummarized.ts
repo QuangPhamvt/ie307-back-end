@@ -9,10 +9,7 @@ type getSummarizedDto = {
 }
 export const getSummarized = async <T extends getSummarizedDto>(props: T) => {
   const { headers, set } = props
-  console.log(headers)
-
   const userId = headers.get("userId") || ""
-  console.log(userId)
 
   try {
     const list_message = await db

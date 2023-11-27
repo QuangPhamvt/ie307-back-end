@@ -7,10 +7,12 @@ export const messages = mysqlTable("message", {
   id: varchar("id", { length: 32 })
     .primaryKey()
     .default(sql`(uuid())`),
-  sender_id: varchar("sender", { length: 32 }).references(() => users.id),
-  receiver_id: varchar("receiver", { length: 32 }).references(() => users.id),
+  sender_id: varchar("sender", { length: 32 }).notNull(),
+  receiver_id: varchar("receiver", { length: 32 }).notNull(),
   message: text("message").notNull(),
-  createAt: datetime("create_at").default(sql`CURRENT_TIMESTAMP`),
+  createAt: datetime("create_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 })
 export const messageRelation = relations(messages, ({ one }) => ({
   sender: one(users, {
