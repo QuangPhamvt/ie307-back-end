@@ -1,5 +1,5 @@
 import { s3ObjectUrl } from "aws/s3"
-import { desc, like, or } from "drizzle-orm"
+import { and, desc, like, or } from "drizzle-orm"
 import { SetElysia } from "src/config"
 import db, { messages, users, usersRelation } from "src/database"
 
@@ -26,7 +26,12 @@ export const originChat = async <T extends TOriginChat>(props: T) => {
         create_at: messages.createAt,
       })
       .from(messages)
-      .where(or(like(messages.sender_id, authId), like(messages.receiver_id, user_id)))
+      .where(
+        or(
+          and(like(messages.sender_id, authId), like(messages.receiver_id, user_id)),
+          and(like(messages.sender_id, user_id), like(messages.receiver_id, authId)),
+        ),
+      )
       .orderBy(desc(messages.createAt))
     const [user] = await db
       .select({
