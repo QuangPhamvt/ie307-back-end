@@ -1,5 +1,5 @@
-import { and, like } from "drizzle-orm"
 import Elysia, { t } from "elysia"
+import { and, like } from "drizzle-orm"
 import db, { listMessages, messages, users } from "src/database"
 import { notifications } from "src/database/schema/notifications"
 const notificationData = async (id: string) => {

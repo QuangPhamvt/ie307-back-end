@@ -9,7 +9,7 @@ export const listMessages = mysqlTable("List_messages", {
   author_id: varchar("author_id", { length: 32 }),
   user_id: varchar("user_id", { length: 32 }).notNull(),
   message: varchar("message", { length: 255 }).notNull(),
-  sender_id: varchar("sender_id", { length: 32 }),
+  sender_id: varchar("sender_id", { length: 32 }).notNull(),
   createAt: datetime("create_at")
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),

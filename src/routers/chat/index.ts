@@ -1,4 +1,4 @@
-import Elysia, { t } from "elysia"
+import Elysia from "elysia"
 import authorizationMiddleware from "src/middleware/authorization"
 import chatService from "./service"
 import chatModel from "./chat.model"
@@ -13,6 +13,20 @@ const chatRouter = new Elysia()
     },
     {
       response: "getSummarizedResponse",
+      detail: {
+        tags: ["Chat"],
+        security: [{ BearerAuth: [] }],
+      },
+    },
+  )
+  .post(
+    "/origin-chat",
+    ({ request: { headers }, set, body }) => {
+      return chatService.originChat({ headers, set, body })
+    },
+    {
+      body: "postOriginChatBody",
+      response: "postOriginChatResponse",
       detail: {
         tags: ["Chat"],
         security: [{ BearerAuth: [] }],
