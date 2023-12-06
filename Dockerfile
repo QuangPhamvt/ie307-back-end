@@ -1,4 +1,4 @@
-FROM --platform=arm64 oven/bun:1 as base
+FROM --platform=linux/amd64 oven/bun:1 as base
 WORKDIR /user/src/app
 
 # install dependencies into temp directory
