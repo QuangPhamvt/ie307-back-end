@@ -27,6 +27,7 @@
     "drizzle-orm": "^0.29.0",
     "elysia": "latest",
     "mysql2": "^3.6.2",
+    "resend": "^2.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
