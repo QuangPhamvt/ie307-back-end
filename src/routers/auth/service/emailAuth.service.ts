@@ -25,7 +25,7 @@ export const emailAuth = async (props: TEmailAuth) => {
         data: [],
       }
     }
-    if (user && user.is_active) {
+    if (user) {
       set.status = "Bad Request"
       return {
         message: "Email was exist my system",

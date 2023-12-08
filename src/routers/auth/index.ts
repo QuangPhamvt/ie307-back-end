@@ -20,23 +20,23 @@ const authRouter = new Elysia()
       },
     },
   )
-  // .post(
-  //   "/signUp",
-  //   ({ request: { headers }, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
-  //     return authService.signUp({ headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
-  //   },
-  //   {
-  //     body: "signUpBody",
-  //     response: "signUpResponse",
-  //     detail: {
-  //       tags: ["Auth"],
-  //     },
-  //   },
-  // )
+  .post(
+    "/signUp",
+    ({ request: { headers }, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
+      return authService.signUp({ headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
+    },
+    {
+      body: "signUpBody",
+      response: "signUpResponse",
+      detail: {
+        tags: ["Auth"],
+      },
+    },
+  )
   .post(
     "/refresh",
-    ({ request: { headers }, set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
-      return authService.refresh({ headers, set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
+    ({ set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
+      return authService.refresh({ set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
     },
     {
       body: "refreshBody",

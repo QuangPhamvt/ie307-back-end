@@ -5,7 +5,6 @@ import db, { users } from "src/database"
 import { accessToken, refreshToken } from "src/utilities"
 
 type refreshDto = {
-  headers: Headers
   set: SetElysia
   body: {
     refresh: string
@@ -14,7 +13,7 @@ type refreshDto = {
   JWT_REFRESH_TOKEN: any
 }
 export const refresh = async <T extends refreshDto>(props: T) => {
-  const { headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN } = props
+  const { body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN } = props
   try {
     const user = await JWT_REFRESH_TOKEN.verify(body.refresh)
     if (!user || !user.id || !user.username) {
@@ -33,9 +32,8 @@ export const refresh = async <T extends refreshDto>(props: T) => {
       }
     }
 
-    const avatar = user.avatar ? s3ObjectUrl(user.avatar) : null
-    const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, username: user.username, avatar })
-    const rt = await refreshToken(JWT_REFRESH_TOKEN, { id: user.id, username: user.username, avatar })
+    const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, username: user.username, avatar: user.avatar })
+    const rt = await refreshToken(JWT_REFRESH_TOKEN, { id: user.id, username: user.username, avatar: user.avatart })
     return {
       message: "Oke",
       data: [
