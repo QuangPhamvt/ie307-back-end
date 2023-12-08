@@ -12,8 +12,7 @@ env:
 on:
   pull_request:
     branches:
-      - "master"
-      - "developement"
+      - developement
     types:
       - closed
 jobs:
