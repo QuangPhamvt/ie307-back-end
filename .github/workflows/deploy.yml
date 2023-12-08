@@ -1,0 +1,54 @@
+name: Deploy on Enviroment Dev
+env:
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
+  JWT_ACCESS_SECRETKEY: "ie104_access_token"
+  JWT_ACCESS_EXPIRY: "1d"
+  JWT_REFRESH_SECRETKEY: "ie104_refresh_token"
+  JWT_REFRESH_EXPIRY: "3d"
+  AWS_REGION: ${{secrets.AWS_REGION}}
+  AWS_ACCESSKEY_ID: ${{secrets.AWS_ACCESSKEY_ID}}
+  AWS_SECRET_ACCESSKEY: ${{secrets.AWS_SECRET_ACCESSKEY}}
+  AWS_BUCKET_NAME: ${{secrets.AWS_BUCKET_NAME}}
+on:
+  pull_request:
+    branches:
+      - "master"
+      - "developement"
+    types:
+      - closed
+jobs:
+  test_preview:
+    runs-on: self-hosted
+    steps:
+      - name: Check code
+        uses: actions/checkout@v4
+
+      - name: Install package use Bun
+        run: |
+          echo "We using bun to install package!"
+          bun install
+
+      - name: Edit .env
+        run: |
+          rm -rf .env
+          pm2 stop "ie307-back-end"
+          touch .env
+          echo "DATABASE_URL=${{env.DATABASE_URL}}" >> .env
+          echo "PORT_SERVER=4000" >> .env
+          echo "JWT_ACCESS_SECRETKEY=${{env.JWT_ACCESS_SECRETKEY}}" >> .env
+          echo "JWT_ACCESS_EXPIRY=${{env.JWT_ACCESS_EXPIRY}}" >> .env
+          echo "JWT_REFRESH_SECRETKEY=${{env.JWT_REFRESH_SECRETKEY}}" >> .env
+          echo "JWT_REFRESH_EXPIRY=${{env.JWT_REFRESH_EXPIRY}}" >> .env
+          echo "AWS_REGION=${{env.AWS_REGION}}" >> .env
+          echo "AWS_ACCESSKEY_ID=${{env.AWS_ACCESSKEY_ID}}" >> .env
+          echo "AWS_SECRET_ACCESSKEY=${{env.AWS_SECRET_ACCESSKEY}}" >> .env
+          echo "AWS_BUCKET_NAME=${{env.AWS_BUCKET_NAME}}" >> .env
+      # - name: Build bunx
+      #   run: |
+      #     echo "Bun is Building"
+      #     bun db:pull
+      #     bun db:generate
+      #     bun build:server
+      #     bun build:websocket
+      #     pm2 restart "ie307-back-end"
+      #     pm2 restart "ie307-websocket"
