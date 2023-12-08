@@ -18,6 +18,9 @@ on:
       - closed
 jobs:
   test_preview:
+    strategy:
+      matrix:
+        bun-verison: [1.x.x]
     runs-on: self-hosted
     steps:
       - name: Check code
@@ -27,6 +30,11 @@ jobs:
         run: |
           echo "We using bun to install package!"
           bun install
+
+      - name: Check format
+        run: |
+          echo "Using pettier check"
+          bun format
 
       - name: Edit .env
         run: |
@@ -43,12 +51,12 @@ jobs:
           echo "AWS_ACCESSKEY_ID=${{env.AWS_ACCESSKEY_ID}}" >> .env
           echo "AWS_SECRET_ACCESSKEY=${{env.AWS_SECRET_ACCESSKEY}}" >> .env
           echo "AWS_BUCKET_NAME=${{env.AWS_BUCKET_NAME}}" >> .env
-      # - name: Build bunx
-      #   run: |
-      #     echo "Bun is Building"
-      #     bun db:pull
-      #     bun db:generate
-      #     bun build:server
-      #     bun build:websocket
-      #     pm2 restart "ie307-back-end"
-      #     pm2 restart "ie307-websocket"
+      - name: Build bunx
+        run: |
+          echo "Bun is Building"
+          bun db:pull 
+          bun db:generate
+          bun build:server
+          bun build:websocket
+          pm2 restart "ie307-back-end"
+          pm2 restart "ie307-websocket"
