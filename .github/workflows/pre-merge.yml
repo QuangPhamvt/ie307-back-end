@@ -4,7 +4,7 @@ env:
 on:
   pull_request:
     branches:
-      - "master"
+      - development
 jobs:
   test_preview:
     strategy:
