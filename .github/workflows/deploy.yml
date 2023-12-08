@@ -38,8 +38,9 @@ jobs:
       - name: Edit .env
         run: |
           if [ -f .env ]; then
-          then echo "Remove .env"
-          rm -rf .env
+            echo "Remove .env"
+            rm -rf .env
+          fi
 
           pm2 stop "ie307-back-end"
           touch .env
