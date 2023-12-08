@@ -42,7 +42,6 @@ jobs:
             rm -rf .env
           fi
 
-          pm2 stop "ie307-back-end"
           touch .env
           echo "DATABASE_URL=${{env.DATABASE_URL}}" >> .env
           echo "PORT_SERVER=4000" >> .env
@@ -60,6 +59,4 @@ jobs:
           bun db:pull 
           bun db:generate
           bun build:server
-          bun build:websocket
-          pm2 restart "ie307-back-end"
-          pm2 restart "ie307-websocket"
+          pm2 start "bun dev" --name "ie307-back-end"
