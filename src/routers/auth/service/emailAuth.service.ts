@@ -40,10 +40,11 @@ export const emailAuth = async (props: TEmailAuth) => {
       message: "Sent email",
       data: [],
     }
-  } catch (error) {
+  } catch (error: any) {
+    console.log(error.message)
     set.status = "Internal Server Error"
     return {
-      message: "Internal Server Error",
+      message: error?.message ? error.message : "Internal Server Error",
       data: [],
     }
   }

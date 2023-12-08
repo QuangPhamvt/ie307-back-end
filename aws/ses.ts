@@ -1,4 +1,4 @@
-import aws from "@aws-sdk/client-ses"
+import * as aws from "@aws-sdk/client-ses"
 import { createTransport } from "nodemailer"
 
 // Create SES service object
@@ -21,11 +21,7 @@ const sendEmail = async (email: string, code_digit: string) => {
     text: `${code_digit} is your Instagram code`,
     html: "<b>Hi, thank for use my application. Have a good day!</b>",
   }
-  try {
-    const info = await transporter.sendMail(mailOption)
-    console.log("Email sent successfully!", info.messageId)
-  } catch (error) {
-    console.log(error)
-  }
+  const info = await transporter.sendMail(mailOption)
+  console.log("Email sent successfully!", info.messageId)
 }
 export default sendEmail
