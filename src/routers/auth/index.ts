@@ -35,12 +35,25 @@ const authRouter = new Elysia()
   )
   .post(
     "/refresh",
-    ({ request: { headers }, set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
-      return authService.refresh({ headers, set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
+    ({ set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
+      return authService.refresh({ set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
     },
     {
       body: "refreshBody",
       response: "refreshResponse",
+      detail: {
+        tags: ["Auth"],
+      },
+    },
+  )
+  .post(
+    "/email-auth",
+    ({ set, body }) => {
+      return authService.emailAuth({ set, body })
+    },
+    {
+      body: "emailAuthBody",
+      response: "emailAuthResponse",
       detail: {
         tags: ["Auth"],
       },

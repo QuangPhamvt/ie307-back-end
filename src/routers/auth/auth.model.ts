@@ -1,7 +1,7 @@
 import Elysia, { t } from "elysia"
 
 const signInBodyDto = t.Object({
-  email: t.String({ default: "email@example.com", format: "email" }),
+  email: t.String({ default: "quangpm220503vt@gmail.com", format: "email" }),
   password: t.String({ default: "12345678" }),
 })
 const signInResponseDto = t.Object({
@@ -15,9 +15,9 @@ const signInResponseDto = t.Object({
 })
 
 const signUpBodyDto = t.Object({
-  email: t.String({ default: "email@example.com", format: "email" }),
-  username: t.String({ default: "CustomAFK" }),
+  email: t.String({ default: "quangpm220503vt@gmail.com", format: "email" }),
   password: t.String({ default: "12345678" }),
+  code_digit: t.String({ default: "190256" }),
 })
 const signUpResponseDto = t.Object({
   message: t.String(),
@@ -47,8 +47,13 @@ const profileResponseDto = t.Object({
   data: t.Array(
     t.Object({
       id: t.String(),
-      username: t.String(),
+      email: t.Union([t.String(), t.Null()]),
+      username: t.Union([t.String(), t.Null()]),
       avatar: t.Union([t.String(), t.Null()]),
+      name: t.Union([t.String(), t.Null()]),
+      pronouns: t.Union([t.String(), t.Null()]),
+      bio: t.Union([t.String(), t.Null()]),
+      gender: t.Union([t.Literal("male"), t.Literal("female"), t.Literal("Can not say"), t.Null()]),
     }),
   ),
 })
@@ -58,6 +63,14 @@ const uploadBodyDto = t.Object({
 })
 const uploadResponseDto = t.Object({
   message: t.String(),
+})
+
+const emailAuthBodyDto = t.Object({
+  email: t.String({ default: "quangpm220503vt@gmail.com" }),
+})
+const emailAuthResponseDto = t.Object({
+  message: t.String(),
+  data: t.Array(t.Object({})),
 })
 
 const authModel = new Elysia().model({
@@ -74,5 +87,8 @@ const authModel = new Elysia().model({
 
   uploadBody: uploadBodyDto,
   uploadResponse: uploadResponseDto,
+
+  emailAuthBody: emailAuthBodyDto,
+  emailAuthResponse: emailAuthResponseDto,
 })
 export default authModel

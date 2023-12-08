@@ -5,10 +5,10 @@ type NewUser = typeof users.$inferInsert
 export const insertUser = async (newUser: NewUser) => {
   return await db.insert(users).values(newUser)
 }
-export const existUser = async (email: string, username: string) => {
+export const existUser = async (email: string) => {
   const [isExist] = await db
     .select()
     .from(users)
-    .where(or(like(users.email, email), like(users.username, username)))
+    .where(or(like(users.email, email)))
   return !!isExist
 }
