@@ -1,7 +1,7 @@
 import { s3ObjectUrl } from "aws/s3"
 import { like } from "drizzle-orm"
 import { SetElysia } from "src/config"
-import db, { notifications, users } from "src/database"
+import db, { users } from "src/database"
 import { accessToken, existUser, insertUser, refreshToken } from "src/utilities"
 
 type signUpDto = {
@@ -15,41 +15,4 @@ type signUpDto = {
   JWT_ACCESS_TOKEN: any
   JWT_REFRESH_TOKEN: any
 }
-export const signUp = async <T extends signUpDto>(props: T) => {
-  const { headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN } = props
-  const { email, username, password } = body
-  try {
-    const passwordHash = await Bun.password.hash(password)
-    const isExistUser = await existUser(email, username)
-    if (isExistUser) {
-      set.status = 400
-      return {
-        message: "Username exist!",
-        data: [],
-      }
-    }
-    await insertUser({ email, username, password: passwordHash })
-    const [user] = await db.select().from(users).where(like(users.username, username))
-    await db.insert(notifications).values({ user_id: user.id })
-
-    const avatar = user.avatar ? s3ObjectUrl(user.avatar) : null
-    const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, username: user.username, avatar })
-    const rt = await refreshToken(JWT_REFRESH_TOKEN, { id: user.id, username: user.username, avatar })
-    set.status = 200
-    return {
-      message: "Created new account",
-      data: [
-        {
-          access_token: at,
-          refresh_token: rt,
-        },
-      ],
-    }
-  } catch (error) {
-    set.status = "Internal Server Error"
-    return {
-      message: "Internal Server Error",
-      data: [],
-    }
-  }
-}
+export const signUp = async <T extends signUpDto>(props: T) => {}

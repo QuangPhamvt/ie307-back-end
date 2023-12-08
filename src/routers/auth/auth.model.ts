@@ -60,6 +60,14 @@ const uploadResponseDto = t.Object({
   message: t.String(),
 })
 
+const emailAuthBodyDto = t.Object({
+  email: t.String({ default: "quangpm220503vt@gmail.com" }),
+})
+const emailAuthResponseDto = t.Object({
+  message: t.String(),
+  data: t.Array(t.Object({})),
+})
+
 const authModel = new Elysia().model({
   signInBody: signInBodyDto,
   signInResponse: signInResponseDto,
@@ -74,5 +82,8 @@ const authModel = new Elysia().model({
 
   uploadBody: uploadBodyDto,
   uploadResponse: uploadResponseDto,
+
+  emailAuthBody: emailAuthBodyDto,
+  emailAuthResponse: emailAuthResponseDto,
 })
 export default authModel

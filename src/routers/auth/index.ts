@@ -20,19 +20,19 @@ const authRouter = new Elysia()
       },
     },
   )
-  .post(
-    "/signUp",
-    ({ request: { headers }, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
-      return authService.signUp({ headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
-    },
-    {
-      body: "signUpBody",
-      response: "signUpResponse",
-      detail: {
-        tags: ["Auth"],
-      },
-    },
-  )
+  // .post(
+  //   "/signUp",
+  //   ({ request: { headers }, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
+  //     return authService.signUp({ headers, body, set, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN })
+  //   },
+  //   {
+  //     body: "signUpBody",
+  //     response: "signUpResponse",
+  //     detail: {
+  //       tags: ["Auth"],
+  //     },
+  //   },
+  // )
   .post(
     "/refresh",
     ({ request: { headers }, set, body, JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN }) => {
@@ -41,6 +41,19 @@ const authRouter = new Elysia()
     {
       body: "refreshBody",
       response: "refreshResponse",
+      detail: {
+        tags: ["Auth"],
+      },
+    },
+  )
+  .post(
+    "/email-auth",
+    ({ set, body }) => {
+      return authService.emailAuth({ set, body })
+    },
+    {
+      body: "emailAuthBody",
+      response: "emailAuthResponse",
       detail: {
         tags: ["Auth"],
       },

@@ -1,47 +1,42 @@
 import { relations, sql } from "drizzle-orm"
-import { char, datetime, int, mysqlTable, text, varchar } from "drizzle-orm/mysql-core"
-import { posts } from "./posts"
-import { notifications } from "./notifications"
-import { loves } from "./loves"
-import { messages } from "./message"
+import { boolean, char, datetime, int, mysqlTable, text, varchar } from "drizzle-orm/mysql-core"
+// import { posts } from "./posts"
+// import { notifications } from "./notifications"
+// import { loves } from "./loves"
+// import { messages } from "./message"
 
 // USERS
 export const users = mysqlTable("users", {
-  id: varchar("id", { length: 32 })
+  id: varchar("id", { length: 36 })
     .primaryKey()
     .default(sql`(uuid())`),
-  email: varchar("email", { length: 128 }).unique().notNull(),
-  username: varchar("username", { length: 128 }).unique().notNull(),
+  email: varchar("email", { length: 128 }).unique(),
   password: varchar("password", { length: 128 }).notNull(),
   avatar: varchar("avatar", { length: 240 }),
-  registerAt: datetime("register_at").default(sql`CURRENT_TIMESTAMP`),
+  is_active: boolean("is_active"),
+  register_at: datetime("register_at").default(sql`CURRENT_TIMESTAMP`),
+  code_digit: varchar("code_digit", { length: 6 }),
 })
 export const usersRelation = relations(users, ({ many, one }) => ({
-  posts: many(posts),
-  loves: many(loves),
-  sender: many(messages, { relationName: "sender" }),
-  receiver: many(messages, { relationName: "receiver" }),
-  notification: one(notifications, {
+  profiles: one(profiles, {
     fields: [users.id],
-    references: [notifications.user_id],
+    references: [profiles.user_id],
   }),
 }))
 
-//FOLLOW
-export const follow = mysqlTable("follow", {
-  id: varchar("id", { length: 32 })
+// Profiles
+export const profiles = mysqlTable("profiles", {
+  id: varchar("id", { length: 36 })
     .primaryKey()
     .default(sql`(uuid())`),
-  follower_id: varchar("follower", { length: 32 }),
-  following_id: varchar("following", { length: 32 }),
+  user_id: varchar("user_id", { length: 36 }),
+  name: varchar("name", { length: 50 }),
+  username: varchar("username", { length: 50 }).unique(),
+  pronouns: varchar("pronouns", { length: 255 }),
+  bio: text("bio"),
+  gender: varchar("gender", { length: 12, enum: ["male", "female", "Can not say"] }),
 })
-export const followeRelation = relations(follow, ({ one }) => ({
-  follower: one(users, {
-    fields: [follow.follower_id],
-    references: [users.id],
-  }),
-  following: one(users, {
-    fields: [follow.following_id],
-    references: [users.id],
-  }),
+
+export const profilesRelation = relations(profiles, ({ one }) => ({
+  users: one(users),
 }))
