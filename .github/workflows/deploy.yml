@@ -27,7 +27,7 @@ jobs:
 
       - name: Stop pm2 ie307-back-end
         run: |
-
+          pm2 stop "ie307-back-end"
       - name: Install package use Bun
         run: |
           echo "We using bun to install package!"
@@ -61,4 +61,4 @@ jobs:
           echo "Bun is Building"
           bun db:pull 
           bun db:generate
-          pm2 start "bun dev" --name "ie307-back-end"
+          pm2 restart "ie307-back-end"
