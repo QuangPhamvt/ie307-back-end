@@ -6,30 +6,33 @@ import db, { posts } from "src/database"
 type postListDto = {
   headers: Headers
   body: {
-    limit: number
-    page: number
+    offset: string
+    limit: string
   }
   set: SetElysia
 }
 export const postList = async <T extends postListDto>(props: T) => {
   const { headers, body, set } = props
-  const { limit = 5, page = 1 } = body
+  const { limit = 5, offset = 1 } = body
   try {
     const postList = await db
       .select({
         id: posts.id,
-        image: posts.image,
+        images: posts.images,
       })
       .from(posts)
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy(desc(posts.createAt))
+      .limit(+limit)
+      .offset(+offset)
+      .orderBy(desc(posts.create_at))
     return {
       message: "Oke",
       data: postList.map((item) => {
+        const Images = JSON.parse(item.images).map((subItem: string) => {
+          return s3ObjectUrl(subItem || "")
+        })
         return {
           ...item,
-          image: s3ObjectUrl(item.image || ""),
+          images: Images,
         }
       }),
     }
