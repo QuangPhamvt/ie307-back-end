@@ -2,15 +2,15 @@ import Elysia, { t } from "elysia"
 import { imageMock } from "src/utilities"
 
 const postListBodyDto = t.Object({
-  limit: t.Number(),
-  page: t.Number(),
+  limit: t.String(),
+  offset: t.String(),
 })
 const postListResponseDto = t.Object({
   message: t.String(),
   data: t.Array(
     t.Object({
       id: t.String(),
-      image: t.String(),
+      images: t.Array(t.String()),
     }),
   ),
 })
@@ -59,10 +59,11 @@ const originPostResponseDto = t.Object({
 
 const uploadPostBodyDto = t.Object({
   title: t.String({ default: "Hello minnasan" }),
-  image: t.String({ default: imageMock }),
+  images: t.Array(t.String({ contentEncoding: "base64" })),
 })
 const uploadPostResponseDto = t.Object({
   message: t.String(),
+  data: t.Array(t.Object({})),
 })
 
 const postModel = new Elysia().model({
