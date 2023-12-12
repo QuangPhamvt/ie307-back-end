@@ -1,24 +1,17 @@
 ---
-name: "🐞 Bug Report"
-about: "Report an issue to help the project improve."
-title: "[Bug] "
-labels: "Type: Bug"
+name: "📚 Documentation or README.md issue report"
+about: "Report an issue in the project's documentation or README.md file."
+title: ""
+labels: "Documentation"
 assignees: QuangPhamvt
 
 ---
-
-# **🐞 Bug Report**
+# **📚 Documentation Issue Report**
 
 ## **Describe the bug**
 <!-- A clear and concise description of what the bug is. -->
 
 *
-
----
-
-### **Is this a regression?**
-<!-- Did this behaviour used to work in the previous version? -->
-<!-- Yes, the last version in which this bug was not present was: ... -->
 
 ---
 
@@ -40,27 +33,15 @@ assignees: QuangPhamvt
 
 ---
 
-### **Expected behaviour**
-<!-- A clear and concise description of what you expected to happen. -->
-
-*
-
----
-
 ### **Media prove**
 <!-- If applicable, add screenshots or videos to help explain your problem. -->
 
 ---
 
-### **Your environment**
+## **Describe the solution you'd like**
+<!-- A clear and concise description of what you want to happen. -->
 
-<!-- use all the applicable bulleted list elements for this specific issue,
-and remove all the bulleted list elements that are not relevant for this issue. -->
-
-* OS: <!--[e.g. Ubuntu 5.4.0-26-generic x86_64 / Windows 1904 ...]-->
-* Node version:
-* Npm version:
-* Browser name and version:
+*
 
 ---
 
