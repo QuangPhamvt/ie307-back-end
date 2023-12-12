@@ -80,6 +80,7 @@ const authRouter = new Elysia()
     },
     {
       body: "uploadBody",
+      response: "uploadResponse",
       detail: {
         tags: ["Auth"],
         security: [{ BearerAuth: [] }],
