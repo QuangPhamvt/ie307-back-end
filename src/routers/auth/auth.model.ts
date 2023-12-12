@@ -63,6 +63,7 @@ const uploadBodyDto = t.Object({
 })
 const uploadResponseDto = t.Object({
   message: t.String(),
+  data: t.Array(t.Object({})),
 })
 
 const emailAuthBodyDto = t.Object({

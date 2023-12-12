@@ -24,7 +24,7 @@ export const uploadObject = async (
   contentType: string,
 ) => {
   try {
-    const paralleUploads3 = new Upload({
+    const parallelUploads3 = new Upload({
       client,
       params: {
         Bucket: process.env.AWS_BUCKET_NAME || "",
@@ -54,7 +54,7 @@ export const uploadObject = async (
        */
       leavePartsOnError: false,
     })
-    await paralleUploads3.done()
+    await parallelUploads3.done()
   } catch (error) {
     console.log("🚀 ~ file: s3.ts:55 ~ error:", error)
   }
