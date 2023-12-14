@@ -1,6 +1,48 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, unique, varchar, text, datetime, tinyint } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, varchar, text, datetime, int, unique, tinyint } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
 
+
+export const comments = mysqlTable("comments", {
+	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
+	postId: varchar("post_id", { length: 36 }),
+	context: text("context"),
+	createAt: datetime("create_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
+	updateAt: datetime("update_at", { mode: 'string'}),
+	parentId: varchar("parent_id", { length: 36 }),
+	authorId: varchar("author_id", { length: 36 }),
+	loves: int("loves").default(0),
+},
+(table) => {
+	return {
+		commentsIdPk: primaryKey({ columns: [table.id], name: "comments_id_pk"}),
+	}
+});
+
+export const loves = mysqlTable("loves", {
+	postId: varchar("post_id", { length: 36 }).notNull(),
+	lovers: text("lovers").notNull(),
+},
+(table) => {
+	return {
+		lovesPostIdPk: primaryKey({ columns: [table.postId], name: "loves_post_id_pk"}),
+	}
+});
+
+export const posts = mysqlTable("posts", {
+	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
+	authorId: varchar("author_id", { length: 36 }).notNull(),
+	images: text("images").notNull(),
+	title: varchar("title", { length: 75 }).notNull(),
+	slug: varchar("slug", { length: 100 }).notNull(),
+	createAt: datetime("create_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	loves: int("loves").default(0),
+	comments: int("comments").default(0),
+},
+(table) => {
+	return {
+		postsIdPk: primaryKey({ columns: [table.id], name: "posts_id_pk"}),
+	}
+});
 
 export const profiles = mysqlTable("profiles", {
 	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),

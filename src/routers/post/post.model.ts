@@ -1,5 +1,4 @@
 import Elysia, { t } from "elysia"
-import { imageMock } from "src/utilities"
 
 const postListBodyDto = t.Object({
   limit: t.String(),
@@ -43,16 +42,26 @@ const originPostResponseDto = t.Object({
   message: t.String(),
   data: t.Array(
     t.Object({
-      originPost: t.Object({
-        post_id: t.String(),
-        title: t.String(),
-        image: t.String(),
-        author: t.Object({
+      id: t.String(),
+      title: t.String(),
+      images: t.Any(),
+      loves: t.Union([t.Number(), t.Null()]),
+      comments: t.Union([t.Number(), t.Null()]),
+      create_at: t.Date(),
+      author_id: t.String(),
+      avatar: t.Union([t.String(), t.Null()]),
+      email: t.Union([t.String(), t.Null()]),
+      comment: t.Union([
+        t.Object({
           author_id: t.String(),
-          username: t.String(),
           avatar: t.Union([t.String(), t.Null()]),
+          email: t.Union([t.String(), t.Null()]),
+          context: t.Union([t.String(), t.Null()]),
+          loves: t.Union([t.Number(), t.Null()]),
+          create_at: t.Union([t.Date(), t.Null()]),
         }),
-      }),
+        t.Null(),
+      ]),
     }),
   ),
 })
