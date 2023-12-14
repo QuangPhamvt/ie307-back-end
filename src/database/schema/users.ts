@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm"
 import { boolean, char, datetime, int, mysqlTable, text, varchar } from "drizzle-orm/mysql-core"
+import { comments } from "./comments"
 // import { posts } from "./posts"
 // import { notifications } from "./notifications"
 // import { loves } from "./loves"
@@ -22,6 +23,7 @@ export const usersRelation = relations(users, ({ many, one }) => ({
     fields: [users.id],
     references: [profiles.user_id],
   }),
+  comments: many(comments),
 }))
 
 // Profiles
