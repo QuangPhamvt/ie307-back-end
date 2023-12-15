@@ -28,6 +28,30 @@ export const loves = mysqlTable("loves", {
 	}
 });
 
+export const notificationPosts = mysqlTable("notification_posts", {
+	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
+	senderId: varchar("sender_id", { length: 36 }),
+	postId: varchar("post_id", { length: 36 }),
+	context: text("context"),
+	createAt: datetime("create_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`).notNull(),
+},
+(table) => {
+	return {
+		notificationPostsIdPk: primaryKey({ columns: [table.id], name: "notification_posts_id_pk"}),
+	}
+});
+
+export const notifications = mysqlTable("notifications", {
+	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
+	authorId: varchar("author_id", { length: 36 }),
+	notifications: int("notifications").default(0),
+},
+(table) => {
+	return {
+		notificationsIdPk: primaryKey({ columns: [table.id], name: "notifications_id_pk"}),
+	}
+});
+
 export const posts = mysqlTable("posts", {
 	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
 	authorId: varchar("author_id", { length: 36 }).notNull(),
