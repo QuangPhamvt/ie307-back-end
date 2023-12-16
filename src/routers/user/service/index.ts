@@ -1,5 +1,11 @@
-import { postOriginUser } from "./postOriginUser.service"
+import { getMe } from "./getMe.service"
+import { uploadFollow } from "./uploadFollow.service"
+import { getUserDetail } from "./getUserDetail.service"
+import { uploadProfile } from "./uploadProfile.service"
 const userService = {
-  postOriginUser,
+  getUserDetail,
+  getMe,
+  uploadFollow,
+  uploadProfile,
 }
 export default userService

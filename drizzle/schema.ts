@@ -18,6 +18,18 @@ export const comments = mysqlTable("comments", {
 	}
 });
 
+export const follows = mysqlTable("follows", {
+	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
+	followingId: text("following_id"),
+	follows: int("follows").default(0),
+	following: int("following").default(0),
+},
+(table) => {
+	return {
+		followsIdPk: primaryKey({ columns: [table.id], name: "follows_id_pk"}),
+	}
+});
+
 export const loves = mysqlTable("loves", {
 	postId: varchar("post_id", { length: 36 }).notNull(),
 	lovers: text("lovers").notNull(),
@@ -44,7 +56,7 @@ export const notificationPosts = mysqlTable("notification_posts", {
 export const notifications = mysqlTable("notifications", {
 	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
 	authorId: varchar("author_id", { length: 36 }),
-	notifications: int("notifications").default(0),
+	notifications: int("notifications").notNull(),
 },
 (table) => {
 	return {

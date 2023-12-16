@@ -38,7 +38,23 @@ export const profiles = mysqlTable("profiles", {
   bio: text("bio"),
   gender: varchar("gender", { length: 12, enum: ["male", "female", "Can not say"] }),
 })
-
 export const profilesRelation = relations(profiles, ({ one }) => ({
   users: one(users),
+}))
+
+// Follow
+
+export const follows = mysqlTable("follows", {
+  id: varchar("id", { length: 36 })
+    .primaryKey()
+    .default(sql`(uuid())`),
+  following_id: text("following_id"),
+  follows: int("follows").default(0),
+  following: int("following").default(0),
+})
+export const followsRelation = relations(follows, ({ one }) => ({
+  users: one(users, {
+    fields: [follows.id],
+    references: [users.id],
+  }),
 }))
