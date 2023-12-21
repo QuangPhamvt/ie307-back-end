@@ -57,6 +57,7 @@ jobs:
           echo "AWS_ACCESSKEY_ID=${{env.AWS_ACCESSKEY_ID}}" >> .env
           echo "AWS_SECRET_ACCESSKEY=${{env.AWS_SECRET_ACCESSKEY}}" >> .env
           echo "AWS_BUCKET_NAME=${{env.AWS_BUCKET_NAME}}" >> .env
+          echo "RESEND_KEY=${{secrets.RESEND_KEY}}" >> .env
       - name: Build bunx
         run: |
           echo "Bun is Building"
