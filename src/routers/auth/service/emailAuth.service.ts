@@ -1,5 +1,5 @@
-import sendEmail from "aws/ses"
 import { like } from "drizzle-orm"
+import resend from "email/index"
 import { SetElysia } from "src/config"
 import db, { users } from "src/database"
 import { genDigit } from "src/utilities"
@@ -33,7 +33,11 @@ export const emailAuth = async (props: TEmailAuth) => {
       }
     }
     const code_digit = genDigit().toString()
-    await sendEmail(email, code_digit)
+    await resend({
+      email,
+      subject: `${code_digit} is your app code`,
+      text: "Hi, thank for use my application. Have a good day!",
+    })
     await db.insert(users).values({ email, password: "", is_active: false, code_digit })
     set.status = "Created"
     return {
@@ -44,7 +48,7 @@ export const emailAuth = async (props: TEmailAuth) => {
     console.log(error.message)
     set.status = "Internal Server Error"
     return {
-      message: error?.message ? error.message : "Internal Server Error",
+      message: "Internal Server Error",
       data: [],
     }
   }

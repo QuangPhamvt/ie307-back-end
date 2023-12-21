@@ -28,7 +28,6 @@
     "drizzle-orm": "^0.29.0",
     "elysia": "latest",
     "mysql2": "^3.6.2",
-    "nodemailer": "^6.9.7",
     "resend": "^2.0.0",
     "uuid": "^9.0.1"
   },

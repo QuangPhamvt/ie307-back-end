@@ -2,13 +2,8 @@ FROM oven/bun:1 as base
 WORKDIR /usr/src/app
 
 FROM base as install
-COPY package.json .
-COPY bun.lockb .
-RUN bun install --production --frozen-lockfile  --ignore-scripts
-COPY src src
-COPY aws aws
-COPY tsconfig.json .
-COPY drizzle.config.ts .
+COPY . .
+RUN bun install --frozen-lockfile  --ignore-scripts
 
 # run the app
 USER  bun

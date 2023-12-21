@@ -6,7 +6,6 @@ docker-compose*
 .gitignore
 README.md
 .vscode
-.env
 .editorconfig
 .ide
 .husky

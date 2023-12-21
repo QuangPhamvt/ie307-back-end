@@ -5,6 +5,24 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - >
+        touch -p .env
+        if [ -f .env ]; then
+          echo "File environments exist."
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+          echo "PORT_SERVER=$4000" >> .env
+          echo "JWT_ACCESS_SECRETKEY=$JWT_ACCESS_SECRETKEY" >> .env
+          echo "JWT_ACCESS_EXPIRY=$JWT_ACCESS_EXPIRY" >> .env
+          echo "JWT_REFRESH_SECRETKEY=$JWT_REFRESH_SECRETKEY" >> .env
+          echo "JWT_REFRESH_EXPIRY=$JWT_REFRESH_EXPIRY" >> .env
+          echo "AWS_REGION=$AWS_REGION" >> .env
+          echo "AWS_ACCESSKEY_ID=$AWS_ACCESSKEY_ID" >> .env
+          echo "AWS_SECRET_ACCESSKEY=$AWS_SECRET_ACCESSKEY" >> .env
+          echo "AWS_BUCKET_NAME=$AWS_BUCKET_NAME" >> .env
+          echo "RESEND_KEY=$RESEND_KEY" >> .env
+        else
+          echo "Have exist file environments"
+        fi
   build:
     commands:
       - echo Build started on `date`
