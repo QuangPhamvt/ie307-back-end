@@ -5,8 +5,8 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - touch -p .env
       - >
-        touch -p .env
         if [ -f .env ]; then
           echo "File environments exist."
           echo "DATABASE_URL=$DATABASE_URL" >> .env
