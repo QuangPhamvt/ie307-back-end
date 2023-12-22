@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 oven/bun:latest as base
+FROM public.ecr.aws/cutstomafk/bun:latest as base
 WORKDIR /usr/src/app
 
 FROM base as install
