@@ -1,4 +1,4 @@
-FROM --platform=arm64 public.ecr.aws/maxird/bun:1-arm64 as base
+FROM public.ecr.aws/cutstomafk/bun:latest as base
 WORKDIR /usr/src/app
 
 FROM base as install
