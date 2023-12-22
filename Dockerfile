@@ -1,9 +1,9 @@
-FROM public.ecr.aws/cutstomafk/bun:latest as base
+FROM --platform=linux/arm64 public.ecr.aws/cutstomafk/bun:latest as base
 WORKDIR /usr/src/app
 
 FROM base as install
 COPY . .
-RUN bun install --frozen-lockfile  --ignore-scripts
+RUN bun install --ignore-scripts
 
 # run the app
 USER  bun
