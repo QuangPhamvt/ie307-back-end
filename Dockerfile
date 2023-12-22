@@ -1,4 +1,4 @@
-FROM public.ecr.aws/cutstomafk/bun:latest as base
+FROM --platform=linux/amd64 public.ecr.aws/cutstomafk/bun:latest as base
 WORKDIR /usr/src/app
 
 FROM base as install
