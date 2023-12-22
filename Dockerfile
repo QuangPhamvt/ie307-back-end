@@ -1,4 +1,4 @@
-FROM --platform=arm64 oven/bun:1 as base
+FROM --platform=arm64 public.ecr.aws/klb/oven/bun:1:1 as base
 WORKDIR /usr/src/app
 
 FROM base as install
