@@ -1,4 +1,4 @@
-FROM public.ecr.aws/maxird/bun:1-arm64 as base
+FROM oven/bun as base
 WORKDIR /usr/src/app
 
 FROM base as install
