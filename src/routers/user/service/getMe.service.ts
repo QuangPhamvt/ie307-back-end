@@ -19,6 +19,7 @@ export const getMe = async (props: TGetMe) => {
         avatar: users.avatar,
         username: profiles.username,
         bio: profiles.bio,
+        post_loves: profiles.post_loves,
         follows: {
           follows: follows.follows,
           following: follows.following,
@@ -40,9 +41,11 @@ export const getMe = async (props: TGetMe) => {
       .where(like(posts.author_id, user_id))
       .orderBy(desc(posts.create_at))
 
+    const post_loves: Array<string> = JSON.parse(user.post_loves || `[]`)
     const User = {
       ...user,
       avatar: user.avatar ? s3ObjectUrl(user.avatar) : null,
+      post_loves,
     }
     const Posts = post.map((post) => {
       const images: Array<string> = JSON.parse(post.images)

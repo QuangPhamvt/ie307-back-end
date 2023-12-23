@@ -36,6 +36,7 @@ const getMeResponseDto = t.Object({
         email: t.Union([t.String(), t.Null()]),
         username: t.Union([t.String(), t.Null()]),
         bio: t.Union([t.String(), t.Null()]),
+        post_loves: t.Array(t.String()),
         follows: t.Union([
           t.Object({
             follows: t.Union([t.Number(), t.Null()]),
@@ -64,6 +65,7 @@ const uploadFollowResponseDto = t.Object({
   data: t.Array(t.Any()),
 })
 const uploadProfileBodyDto = t.Object({
+  name: t.Nullable(t.String()),
   username: t.Nullable(t.String()),
   bio: t.Nullable(t.String()),
   gender: t.Union([t.Literal("male"), t.Literal("female"), t.Literal("Can not say"), t.Null()]),
@@ -71,6 +73,13 @@ const uploadProfileBodyDto = t.Object({
 const uploadProfileResponseDto = t.Object({
   message: t.String(),
   data: t.Array(t.Any()),
+})
+const postLoveBodyDto = t.Object({
+  post_id: t.String(),
+})
+const postLoveResponseDto = t.Object({
+  message: t.String(),
+  data: t.Array(t.Object({})),
 })
 
 const userModel = new Elysia().model({
@@ -81,6 +90,8 @@ const userModel = new Elysia().model({
   uploadFollowResponse: uploadFollowResponseDto,
   uploadProfileBody: uploadProfileBodyDto,
   uploadProfileResponse: uploadProfileResponseDto,
+  postLoveBody: postLoveBodyDto,
+  postLoveResponse: postLoveResponseDto,
 })
 
 export default userModel

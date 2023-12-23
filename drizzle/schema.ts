@@ -56,7 +56,7 @@ export const notificationPosts = mysqlTable("notification_posts", {
 export const notifications = mysqlTable("notifications", {
 	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
 	authorId: varchar("author_id", { length: 36 }),
-	notifications: int("notifications").notNull(),
+	notifications: int("notifications").default(0).notNull(),
 },
 (table) => {
 	return {
@@ -88,6 +88,7 @@ export const profiles = mysqlTable("profiles", {
 	pronouns: varchar("pronouns", { length: 255 }),
 	bio: text("bio"),
 	gender: varchar("gender", { length: 12 }),
+	postLoves: text("post_loves"),
 },
 (table) => {
 	return {
