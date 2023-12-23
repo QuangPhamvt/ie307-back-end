@@ -10,7 +10,7 @@ phases:
         if [ -f .env ]; then
           echo "File environments exist."
           echo "DATABASE_URL=$DATABASE_URL" >> .env
-          echo "PORT_SERVER=$4000" >> .env
+          echo "PORT_SERVER=$PORT_SERVER" >> .env
           echo "JWT_ACCESS_SECRETKEY=$JWT_ACCESS_SECRETKEY" >> .env
           echo "JWT_ACCESS_EXPIRY=$JWT_ACCESS_EXPIRY" >> .env
           echo "JWT_REFRESH_SECRETKEY=$JWT_REFRESH_SECRETKEY" >> .env
