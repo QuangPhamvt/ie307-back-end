@@ -5,8 +5,10 @@ import { document } from "./config"
 const app = new Elysia()
   .use(document)
   .get("/", ({ request: headers }) => {
-    url: headers.url
-    redirect: headers.redirect
+    return {
+      url: headers.url,
+      headers: headers.redirect,
+    }
   })
   .use(routers)
 
