@@ -74,7 +74,7 @@ const authRouter = new Elysia()
     },
   )
   .post(
-    "/upload",
+    "/avatar",
     ({ request: { headers }, body, set }) => {
       return authService.upload({ headers, body, set })
     },

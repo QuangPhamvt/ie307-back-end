@@ -61,5 +61,19 @@ const userRouter = new Elysia()
       },
     },
   )
+  .post(
+    "/love",
+    ({ request: { headers }, body, set }) => {
+      return userService.postLove({ headers, body, set })
+    },
+    {
+      body: "postLoveBody",
+      response: "postLoveResponse",
+      detail: {
+        tags: ["User"],
+        security: [{ BearerAuth: [] }],
+      },
+    },
+  )
 
 export default userRouter

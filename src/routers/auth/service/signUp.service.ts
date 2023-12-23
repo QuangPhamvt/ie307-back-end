@@ -1,8 +1,8 @@
 import { s3ObjectUrl } from "aws/s3"
 import { like } from "drizzle-orm"
 import { SetElysia } from "src/config"
-import db, { profiles, users } from "src/database"
-import { accessToken, existUser, insertUser, refreshToken } from "src/utilities"
+import db, { follows, profiles, users } from "src/database"
+import { accessToken, refreshToken } from "src/utilities"
 import generateUsername from "src/utilities/genUsername"
 import { v4 as uuidv4 } from "uuid"
 
@@ -47,7 +47,10 @@ export const signUp = async <T extends signUpDto>(props: T) => {
     const Username = await generateUsername(username[0])
     const hashPassword = await Bun.password.hash(password)
     await db.update(users).set({ is_active: true, password: hashPassword }).where(like(users.email, email))
-    await db.insert(profiles).values({ id, user_id: user.id, username: Username, gender: "Can not say" })
+    await db
+      .insert(profiles)
+      .values({ id, user_id: user.id, username: Username, gender: "Can not say", post_loves: JSON.stringify([]) })
+    await db.insert(follows).values({ id, following_id: JSON.stringify([]), follows: 0, following: 0 })
 
     const avatar = user.avatar ? s3ObjectUrl(user.avatar) : null
     const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, email, username: Username, avatar })

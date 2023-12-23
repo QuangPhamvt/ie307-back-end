@@ -18,13 +18,7 @@ export const uploadFollow = async (props: TUploadFollow) => {
   try {
     const [follow] = await db.select().from(follows).where(like(follows.id, user_id))
     if (Follow) {
-      if (!follow) {
-        await db
-          .insert(follows)
-          .values({ id: user_id, following_id: JSON.stringify([Follow]), follows: 0, following: 1 })
-      } else if (follow.following !== null && follow.following_id !== null) {
-        console.log("Follow")
-
+      if (follow && follow.following !== null && follow.following_id !== null) {
         const following_id: Array<string> = JSON.parse(follow.following_id)
         await db
           .update(follows)
@@ -35,8 +29,6 @@ export const uploadFollow = async (props: TUploadFollow) => {
           .where(like(follows.id, user_id))
       }
       const [another_user] = await db.select().from(follows).where(like(follows.id, Follow))
-      if (!another_user)
-        await db.insert(follows).values({ id: Follow, follows: 1, following_id: JSON.stringify([]), following: 0 })
       if (another_user && another_user.follows) {
         await db.update(follows).set({ follows: another_user.follows + 1 })
       }
@@ -45,9 +37,6 @@ export const uploadFollow = async (props: TUploadFollow) => {
     if (UnFollow) {
       if (follow.following !== null && follow.following_id !== null) {
         const following_id: Array<string> = JSON.parse(follow.following_id)
-        console.log(follow.following_id)
-        console.log(following_id.filter((item) => item !== Follow))
-
         await db
           .update(follows)
           .set({
