@@ -1,102 +1,72 @@
-# IE307-BACK-END | Công nghệ lập trình đa nền tảng cho ứng dụng di động
+<!-- markdownlint-disable MD032 MD033-->
+# 🔥 **CustomAFK GitHub Project IE307**
 
-## About The Project
+<p align="center">
+  <br>
+  <a href="https://github.com/QuangPhamvt/ie307-front-end-next/issues">
+    <img src="https://img.shields.io/github/issues-closed/QuangPhamvt/ie307-front-end-next?color=0088ff&style=for-the-badge&logo=github" alt="@QuangPhamvt/ie307-front-end's issues"/>
+  </a>
+  <a href="https://github.com/QuangPhamvt/ie307-front-end-next/pulls">
+    <img src="https://img.shields.io/github/issues-pr-closed/QuangPhamvt/ie307-front-end-next?color=0088ff&style=for-the-badge&logo=github" alt="@QuangPhamvt/project-template's pull requests"/>
+  </a>
+  <a href="https://github.com/QuangPhamvt/ie307-back-end/actions/workflows/pre-merge.yml">
+    <img src="https://github.com/QuangPhamvt/ie307-back-end/actions/workflows/pre-merge.yml/badge.svg" alt="@QuangPhamvt/ie307-back-end's tests">
+  </a>
+</p>
 
-This is BE for project of IE307.
+---
 
-### Built With
+## 🤔 **What is this project?**
 
-- [Bun][bun-url]
-- [Elysia][elysia-url]
-- [Drizzle Orm][drizzle-url]
-- [Amazon Web Service][aws-url] (EC2, VPCs, RDS, Route 53, S3)
+* This is Back End build by REACT-NATIVE for project of IE307.
 
-## Prerequires
+---
 
-- Bun version >= v1.0.x
+## ⚡ **Installation**
 
-```bash
-curl -fsSL https://bun.sh/install | bash
+1. Prerequires
+- Bun version > 1.0.x 
+2. Clone repository
+   ```bash
+   git clone git@github.com:QuangPhamvt/ie307-back-end.git
+   ```
+3. Install packages
+   ```bash
+   bun install  
+   ```
+4. Install prepare config
+   ```bash
+   bun prepare 
+   ```
+6. Usage
+   ```bash
+   bun start
+   ```
+
+
+---
+
+## 📚 **What does it include?**
+
+
+---
+
+### 🌲 **Project tree**
+
+Files that will get removed after the execution of `SETUP_TEMPLATE.sh` are not shown! 🙈
+
+```text
 ```
 
-## Getting Started
+---
 
-### Installation
+## 📝 **Additional notes**
 
-1. Clone the repo
+## 📸 **Screenshots**
 
-```bash
-git clone git@github.com:QuangPhamvt/ie307-back-end.git
-```
+## 📖 **Information**
 
-2. Install yarn packages
-
-- We use Bun for Javascript runtime
-
-```bash
-$ cd ./ie104-front-end
-$ bun install
-```
-
-3. Config environment
-
-- Setup Client
-  > file .env in folder client
-
-```
-DATABASE_URL="..." #connect to database
-```
-
-- Husky setup
-
-```bash
-bun prepare
-```
-
-### Usage
-
-- Run Client
-
-```bash
-$ cd ./ie307-front-end
-$ bun start
-```
-
-## Information
-
-### Client
-
-- Feature
-- Package using
-
-```
-  "dependencies": {
-    "@elysiajs/jwt": "^0.7.0",
-    "@elysiajs/swagger": "^0.7.3",
-    "@planetscale/database": "^1.11.0",
-    "dotenv": "^16.3.1",
-    "drizzle-orm": "^0.28.6",
-    "elysia": "latest",
-    "mysql2": "^3.6.2"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^17.8.0",
-    "@commitlint/config-conventional": "^17.8.0",
-    "bun-types": "latest",
-    "drizzle-kit": "^0.19.13",
-    "husky": "^8.0.0",
-    "lint-staged": "^15.0.1",
-    "prettier": "3.0.3"
-  },
-```
-
-### Technology
-
-## Link Demo
-
-link:
-
-## How to push
+## ❔ **How to push**
 
 - Role commit
   `{type}: {subject}`
@@ -125,10 +95,4 @@ Description
 |chore| Other changes that don't modify src or test files |
 |revert| Reverts a previous commit |
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[bun-url]: https://bun.sh/
-[elysia-url]: https://elysiajs.com/
-[drizzle-url]: https://orm.drizzle.team/
-[aws-url]: https://docs.aws.amazon.com/
