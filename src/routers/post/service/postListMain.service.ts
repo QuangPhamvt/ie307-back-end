@@ -1,21 +1,20 @@
 import { s3ObjectUrl } from "aws/s3"
-import { desc, like } from "drizzle-orm"
+import { desc, like, or } from "drizzle-orm"
 import { SetElysia } from "src/config"
 import db, { comments, posts, users } from "src/database"
 
-type originPostDto = {
+type TPostListMain = {
   headers: Headers
   body: {
-    post_id: string
+    user_id: Array<string>
   }
   set: SetElysia
 }
-export const originPost = async <T extends originPostDto>(props: T) => {
+export const postListMain = async (props: TPostListMain) => {
   const { headers, body, set } = props
-  const { post_id } = body
+  const user_id = headers.get("userId") || ""
+  const user = body.user_id
   try {
-    const [post] = await db.select().from(posts).where(like(posts.id, post_id))
-
     const postList = await db
       .select({
         id: posts.id,
@@ -30,9 +29,18 @@ export const originPost = async <T extends originPostDto>(props: T) => {
         email: users.email,
       })
       .from(posts)
-      .where(like(posts.author_id, post.author_id))
+      .where(
+        or(
+          like(posts.author_id, user[0] || ""),
+          like(posts.author_id, user[1] || ""),
+          like(posts.author_id, user[2] || ""),
+          like(posts.author_id, user[3] || ""),
+          like(posts.author_id, user[4] || ""),
+        ),
+      )
       .innerJoin(users, like(users.id, posts.author_id))
-
+      .limit(5)
+      .orderBy(desc(posts.create_at))
     let data: any[] = []
     await Promise.all(
       postList.map(async (post) => {
@@ -101,6 +109,7 @@ export const originPost = async <T extends originPostDto>(props: T) => {
     }
   } catch (error) {
     set.status = "Internal Server Error"
+    console.log(error)
     return {
       message: "Internal Server Error",
       data: [],

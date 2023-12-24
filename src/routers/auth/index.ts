@@ -1,4 +1,4 @@
-import Elysia, { t } from "elysia"
+import Elysia from "elysia"
 import authorizationMiddleware from "src/middleware/authorization"
 import { JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN } from "src/config/jwt"
 import authModel from "./auth.model"
@@ -81,6 +81,33 @@ const authRouter = new Elysia()
     {
       body: "uploadBody",
       response: "uploadResponse",
+      detail: {
+        tags: ["User"],
+        security: [{ BearerAuth: [] }],
+      },
+    },
+  )
+  .get(
+    "/send-email-change-password",
+    ({ request: { headers }, set }) => {
+      return authService.sendEmailChangePassword({ headers, set })
+    },
+    {
+      response: "sendChangePasswordResponse",
+      detail: {
+        tags: ["Auth"],
+        security: [{ BearerAuth: [] }],
+      },
+    },
+  )
+  .post(
+    "/change-password",
+    ({ request: { headers }, set, body }) => {
+      return authService.changePassword({ headers, set, body })
+    },
+    {
+      body: "changePasswordBody",
+      response: "changePasswordResponse",
       detail: {
         tags: ["Auth"],
         security: [{ BearerAuth: [] }],

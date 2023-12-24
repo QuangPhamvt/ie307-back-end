@@ -1,16 +1,16 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, varchar, text, datetime, int, unique, tinyint } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, varchar, text, int, datetime, unique, tinyint } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
 
 
 export const comments = mysqlTable("comments", {
 	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
 	postId: varchar("post_id", { length: 36 }),
-	context: text("context"),
-	createAt: datetime("create_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
-	updateAt: datetime("update_at", { mode: 'string'}),
 	parentId: varchar("parent_id", { length: 36 }),
 	authorId: varchar("author_id", { length: 36 }),
+	context: text("context"),
 	loves: int("loves").default(0),
+	createAt: datetime("create_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
+	updateAt: datetime("update_at", { mode: 'string'}),
 },
 (table) => {
 	return {
@@ -87,8 +87,8 @@ export const profiles = mysqlTable("profiles", {
 	username: varchar("username", { length: 50 }),
 	pronouns: varchar("pronouns", { length: 255 }),
 	bio: text("bio"),
-	gender: varchar("gender", { length: 12 }),
 	postLoves: text("post_loves"),
+	gender: varchar("gender", { length: 12 }),
 },
 (table) => {
 	return {
@@ -97,14 +97,27 @@ export const profiles = mysqlTable("profiles", {
 	}
 });
 
+export const stories = mysqlTable("stories", {
+	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
+	image: varchar("image", { length: 255 }),
+	createAt: datetime("create_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	authorId: varchar("author_id", { length: 36 }),
+},
+(table) => {
+	return {
+		storiesIdPk: primaryKey({ columns: [table.id], name: "stories_id_pk"}),
+	}
+});
+
 export const users = mysqlTable("users", {
 	id: varchar("id", { length: 36 }).default(sql`uuid()`).notNull(),
 	email: varchar("email", { length: 128 }),
 	password: varchar("password", { length: 128 }).notNull(),
 	avatar: varchar("avatar", { length: 240 }),
-	registerAt: datetime("register_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
 	isActive: tinyint("is_active"),
+	registerAt: datetime("register_at", { mode: 'string'}).default(sql`CURRENT_TIMESTAMP`),
 	codeDigit: varchar("code_digit", { length: 6 }),
+	codeChangePassword: varchar("code_change_password", { length: 6 }),
 },
 (table) => {
 	return {

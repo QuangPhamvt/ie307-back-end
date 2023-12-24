@@ -74,6 +74,19 @@ const emailAuthResponseDto = t.Object({
   data: t.Array(t.Object({})),
 })
 
+const sendChangePasswordResponseDto = t.Object({
+  message: t.String(),
+  data: t.Array(t.Any()),
+})
+const changePasswordBodyDto = t.Object({
+  code_digit: t.String(),
+  password: t.String(),
+})
+const changePasswordResponseDto = t.Object({
+  message: t.String(),
+  data: t.Array(t.Any()),
+})
+
 const authModel = new Elysia().model({
   signInBody: signInBodyDto,
   signInResponse: signInResponseDto,
@@ -91,5 +104,10 @@ const authModel = new Elysia().model({
 
   emailAuthBody: emailAuthBodyDto,
   emailAuthResponse: emailAuthResponseDto,
+
+  sendChangePasswordResponse: sendChangePasswordResponseDto,
+
+  changePasswordBody: changePasswordBodyDto,
+  changePasswordResponse: changePasswordResponseDto,
 })
 export default authModel

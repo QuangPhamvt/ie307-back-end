@@ -14,10 +14,11 @@ const document = swagger({
     tags: [
       { name: "Auth", description: "Use to [signIn | signOut | signUp]" },
       { name: "Post" },
+      { name: "User" },
+      { name: "Stories" },
       { name: "Follow" },
       { name: "Chat" },
       { name: "Websocket" },
-      { name: "User" },
     ],
     components: {
       securitySchemes: {

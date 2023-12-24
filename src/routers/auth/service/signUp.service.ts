@@ -50,7 +50,7 @@ export const signUp = async <T extends signUpDto>(props: T) => {
     await db
       .insert(profiles)
       .values({ id, user_id: user.id, username: Username, gender: "Can not say", post_loves: JSON.stringify([]) })
-    await db.insert(follows).values({ id, following_id: JSON.stringify([]), follows: 0, following: 0 })
+    await db.insert(follows).values({ id: user.id, following_id: JSON.stringify([]), follows: 0, following: 0 })
 
     const avatar = user.avatar ? s3ObjectUrl(user.avatar) : null
     const at = await accessToken(JWT_ACCESS_TOKEN, { id: user.id, email, username: Username, avatar })
