@@ -61,4 +61,18 @@ const postRouter = new Elysia()
       },
     },
   )
+  .post(
+    "/list-main",
+    ({ request: { headers }, set, body }) => {
+      return postService.postListMain({ headers, set, body })
+    },
+    {
+      body: "postListMainBody",
+      response: "originPostResponse",
+      detail: {
+        tags: ["Post"],
+        security: [{ BearerAuth: [] }],
+      },
+    },
+  )
 export default postRouter

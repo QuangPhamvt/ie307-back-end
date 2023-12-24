@@ -65,6 +65,9 @@ const originPostResponseDto = t.Object({
     }),
   ),
 })
+const postListMainBodyDto = t.Object({
+  user_id: t.Array(t.String()),
+})
 
 const uploadPostBodyDto = t.Object({
   title: t.String({ default: "Hello minnasan" }),
@@ -87,5 +90,7 @@ const postModel = new Elysia().model({
 
   uploadPostBody: uploadPostBodyDto,
   uploadPostResponse: uploadPostResponseDto,
+
+  postListMainBody: postListMainBodyDto,
 })
 export default postModel

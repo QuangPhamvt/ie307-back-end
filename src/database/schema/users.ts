@@ -17,6 +17,7 @@ export const users = mysqlTable("users", {
   is_active: boolean("is_active"),
   register_at: datetime("register_at").default(sql`CURRENT_TIMESTAMP`),
   code_digit: varchar("code_digit", { length: 6 }),
+  code_change_password: varchar("code_change_password", { length: 6 }),
 })
 export const usersRelation = relations(users, ({ many, one }) => ({
   profiles: one(profiles, {

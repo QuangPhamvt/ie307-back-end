@@ -57,6 +57,7 @@ export const uploadFollow = async (props: TUploadFollow) => {
     }
   } catch (error) {
     set.status = "Internal Server Error"
+    console.log(error)
     return {
       message: "Internal Server Error",
       data: [],
