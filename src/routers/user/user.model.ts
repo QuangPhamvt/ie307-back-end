@@ -48,8 +48,15 @@ const getMeResponseDto = t.Object({
       }),
       posts: t.Array(
         t.Object({
-          post_id: t.String(),
+          post_id: t.String({ format: "uuid" }),
           images: t.Array(t.String()),
+          create_at: t.Date(),
+        }),
+      ),
+      stories: t.Array(
+        t.Object({
+          id: t.String({ format: "uuid" }),
+          image: t.Union([t.String(), t.Null()]),
           create_at: t.Date(),
         }),
       ),

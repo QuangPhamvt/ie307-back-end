@@ -1,7 +1,8 @@
 import { s3ObjectUrl } from "aws/s3"
-import { desc, like } from "drizzle-orm"
+import { desc, like, sql } from "drizzle-orm"
+import { ResultSetHeader } from "mysql2"
 import { SetElysia } from "src/config"
-import db, { follows, posts, profiles, users } from "src/database"
+import db, { follows, posts, profiles, stories, users } from "src/database"
 
 type TGetMe = {
   headers: Headers
@@ -10,7 +11,6 @@ type TGetMe = {
 export const getMe = async (props: TGetMe) => {
   const { headers, set } = props
   const user_id = headers.get("userId") || ""
-  console.log(user_id)
   try {
     const [user] = await db
       .select({
@@ -41,6 +41,21 @@ export const getMe = async (props: TGetMe) => {
       .where(like(posts.author_id, user_id))
       .orderBy(desc(posts.create_at))
 
+    let Stories = await db
+      .select({
+        id: stories.id,
+        image: stories.image,
+        create_at: stories.create_at,
+      })
+      .from(stories)
+      .where(sql`${stories.author_id} = ${user_id} and NOW() - INTERVAL 1 DAY`)
+    Stories = Stories.map((story) => {
+      return {
+        ...story,
+        image: s3ObjectUrl(story.image || ""),
+      }
+    })
+
     const post_loves: Array<string> = JSON.parse(user.post_loves || `[]`)
     const User = {
       ...user,
@@ -61,6 +76,7 @@ export const getMe = async (props: TGetMe) => {
         {
           user: User,
           posts: Posts,
+          stories: Stories,
         },
       ],
     }

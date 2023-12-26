@@ -8,8 +8,8 @@ const postListResponseDto = t.Object({
   message: t.String(),
   data: t.Array(
     t.Object({
-      id: t.String(),
-      images: t.Array(t.String()),
+      id: t.String({ format: "uuid" }),
+      images: t.Array(t.String({})),
     }),
   ),
 })
@@ -22,7 +22,7 @@ const searchResponseDto = t.Object({
   data: t.Array(
     t.Object({
       author: t.Object({
-        author_id: t.String(),
+        author_id: t.String({ format: "uuid" }),
         avatar: t.Union([t.String(), t.Null()]),
         username: t.String(),
       }),
@@ -62,6 +62,13 @@ const originPostResponseDto = t.Object({
         }),
         t.Null(),
       ]),
+      stories: t.Array(
+        t.Object({
+          id: t.String({ format: "uuid" }),
+          image: t.Union([t.String(), t.Null()]),
+          create_at: t.Date(),
+        }),
+      ),
     }),
   ),
 })
