@@ -1,7 +1,7 @@
 import { s3ObjectUrl } from "aws/s3"
-import { desc, like, or } from "drizzle-orm"
+import { desc, like, or, sql } from "drizzle-orm"
 import { SetElysia } from "src/config"
-import db, { comments, posts, users } from "src/database"
+import db, { comments, posts, stories, users } from "src/database"
 
 type TPostListMain = {
   headers: Headers
@@ -51,6 +51,21 @@ export const postListMain = async (props: TPostListMain) => {
           .where(like(comments.id, post.id))
           .innerJoin(users, like(comments.author_id, users.id))
           .orderBy(desc(comments.create_at))
+        let Stories = await db
+          .select({
+            id: stories.id,
+            image: stories.image,
+            create_at: stories.create_at,
+          })
+          .from(stories)
+          .where(sql`${stories.author_id} = ${post.author_id} and NOW() - INTERVAL 1 DAY`)
+        Stories = Stories.map((story) => {
+          return {
+            ...story,
+            image: s3ObjectUrl(story.image || ""),
+          }
+        })
+
         if (!data.length) {
           data = [
             {
@@ -73,6 +88,7 @@ export const postListMain = async (props: TPostListMain) => {
                     create_at: comment.comments.create_at,
                   }
                 : null,
+              stories: Stories,
             },
           ]
         } else {
@@ -98,6 +114,7 @@ export const postListMain = async (props: TPostListMain) => {
                     create_at: comment.comments.create_at,
                   }
                 : null,
+              stories: Stories,
             },
           ]
         }

@@ -46,7 +46,7 @@ const profileResponseDto = t.Object({
   message: t.String(),
   data: t.Array(
     t.Object({
-      id: t.String(),
+      id: t.String({ format: "uuid" }),
       email: t.Union([t.String(), t.Null()]),
       username: t.Union([t.String(), t.Null()]),
       avatar: t.Union([t.String(), t.Null()]),
