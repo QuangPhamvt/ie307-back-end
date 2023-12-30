@@ -5,5 +5,6 @@ export * from "./schema/notifications"
 export * from "./schema/listMessage"
 export * from "./schema/message"
 export * from "./schema/story"
+export * from "./schema/comments"
 import db from "./schema"
 export default db
