@@ -18,6 +18,7 @@ const document = swagger({
       { name: "Stories" },
       { name: "Follow" },
       { name: "Chat" },
+      { name: "Comment" },
       { name: "Websocket" },
     ],
     components: {
