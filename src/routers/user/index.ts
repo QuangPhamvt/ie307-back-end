@@ -75,5 +75,19 @@ const userRouter = new Elysia()
       },
     },
   )
+  .post(
+    "/search-username",
+    ({ request: { headers }, body, set }) => {
+      return userService.searchUsername({ headers, body, set })
+    },
+    {
+      body: "searchUsernameBody",
+      response: "searchUsernameResponse",
+      detail: {
+        tags: ["User"],
+        security: [{ BearerAuth: [] }],
+      },
+    },
+  )
 
 export default userRouter
