@@ -88,6 +88,20 @@ const postLoveResponseDto = t.Object({
   message: t.String(),
   data: t.Array(t.Object({})),
 })
+const searchUsernameBodyDto = t.Object({
+  username: t.String(),
+})
+const searchUsernameResponseDto = t.Object({
+  message: t.String(),
+  data: t.Array(
+    t.Object({
+      id: t.String({ format: "uuid" }),
+      avatar: t.Union([t.String(), t.Null()]),
+      username: t.Union([t.String(), t.Null()]),
+      bio: t.Union([t.String(), t.Null()]),
+    }),
+  ),
+})
 
 const userModel = new Elysia().model({
   getUserDetailBody: getUserDetailBodyDto,
@@ -99,6 +113,8 @@ const userModel = new Elysia().model({
   uploadProfileResponse: uploadProfileResponseDto,
   postLoveBody: postLoveBodyDto,
   postLoveResponse: postLoveResponseDto,
+  searchUsernameBody: searchUsernameBodyDto,
+  searchUsernameResponse: searchUsernameResponseDto,
 })
 
 export default userModel

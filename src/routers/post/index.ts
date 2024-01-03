@@ -21,19 +21,6 @@ const postRouter = new Elysia()
     },
   )
   .post(
-    "/search",
-    ({ request: { headers }, set, body }) => {
-      return postService.search({ headers, set, body })
-    },
-    {
-      body: "searchBody",
-      response: "searchResponseDto",
-      detail: {
-        tags: ["Post"],
-      },
-    },
-  )
-  .post(
     "/origin",
     ({ request: { headers }, set, body }) => {
       return postService.originPost({ headers, body, set })

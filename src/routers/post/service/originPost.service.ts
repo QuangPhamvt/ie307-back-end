@@ -113,9 +113,11 @@ export const originPost = async <T extends originPostDto>(props: T) => {
         }
       }),
     )
+    const Post = data.find((item) => item.id === post_id)
+    const Data = data.filter((item) => item.id !== post_id)
     return {
       message: "Oke",
-      data: data,
+      data: [Post, ...Data],
     }
   } catch (error) {
     set.status = "Internal Server Error"

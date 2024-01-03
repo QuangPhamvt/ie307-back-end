@@ -27,18 +27,17 @@ export const search = async <T extends searchDto>(props: T) => {
         post_id: posts.id,
         author: {
           author_id: users.id,
-          username: users.username,
+          username: users.email,
           avatar: users.avatar,
         },
-        image: posts.image,
-        createAt: posts.createAt,
+        image: posts.images,
+        createAt: posts.create_at,
         slug: posts.slug,
-        published: posts.published,
       })
       .from(posts)
-      .innerJoin(users, like(posts.authorId, users.id))
+      .innerJoin(users, like(posts.author_id, users.id))
       .where(like(posts.slug, `%${toSlug(search)}%`))
-      .orderBy(desc(posts.createAt))
+      .orderBy(desc(posts.create_at))
     return {
       message: "Oke",
       data: postList.map((item) => {
